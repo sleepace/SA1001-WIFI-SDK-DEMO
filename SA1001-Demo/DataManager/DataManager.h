@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <SA1001/SALAidInfo.h>
+#import <SLPTCP/SA1001AidInfo.h>
 
 #define SharedDataManager [DataManager sharedDataManager]
 @class CBPeripheral;
@@ -16,10 +16,13 @@
 @property (nonatomic, strong) CBPeripheral *peripheral;
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *deviceID;
-@property (nonatomic, assign) double version;
+@property (nonatomic, strong) NSString *version;
 @property (nonatomic, assign) BOOL inRealtime;
 @property (nonatomic, assign) BOOL connected;
 @property (nonatomic, strong) NSString *userID;
+@property (nonatomic, strong) NSString *token;
+@property (nonatomic, strong) NSString *plat;
+@property (nonatomic, strong) NSString *channelID;
 
 @property (nonatomic, assign) NSInteger selectItemsNum;
 
@@ -27,7 +30,7 @@
 
 @property (nonatomic, assign) NSInteger volumn;
 
-@property (nonatomic, strong) SALAidInfo *aidInfo;
+@property (nonatomic, strong) SA1001AidInfo *aidInfo;
 
 + (DataManager *)sharedDataManager;
 

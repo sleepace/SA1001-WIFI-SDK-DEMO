@@ -9,8 +9,8 @@
 #import "CenterSettingViewController.h"
 
 #import "SelectItemCell.h"
-#import <SA1001/SA1001.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+
+#import <SLPTCP/SLPLTcpCommon.h>
 
 @interface CenterSettingViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -49,12 +49,12 @@
     offset = 0x01 << 2;
     BOOL aromaEnable = self.selectItemsNumNew & offset;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setCenterKey:lightEnable musicEnable:musicEnable aromaEnable:aromaEnable timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetCenterKey:lightEnable musicEnable:musicEnable aromaEnable:aromaEnable deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{

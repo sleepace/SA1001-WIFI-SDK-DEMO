@@ -8,12 +8,7 @@
 
 #import "MainViewController.h"
 #import "TabBarItemCell.h"
-#import "TabBarItemCell.h"
 #import <math.h>
-#import <BluetoothManager/BluetoothManager.h>
-#import <SLPMLan/SLPMLan.h>
-#import <SLPMLan/SLPMLan.h>
-#import <SA1001/SA1001.h>
 
 #define kMenuItemHeight 49.0
 #define kMenuItemID @"TabBarItemCell"
@@ -39,7 +34,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     //must init BLE manager first
-    SLPBLESharedManager;
+    SLPSharedHTTPManager;
+    SLPSharedLTcpManager;
 
     NSInteger logLevel = KFLogerLevel_All;
     KFSetLogerLevel(logLevel);
@@ -105,25 +101,8 @@
 //    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameBLEDeviceConnected object:nil];
 //    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameBLEDeviceDisconnect object:nil];
     
-    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameWLANDeviceConnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameWLANDeviceDisconnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(networkChanged:) name:kNetWorkChangedNotification object:nil];
-}
-
-- (void)networkChanged:(NSNotification *)notification
-{
-    NSLog(@"networkChanged");
-    kNetworkStatus status = [[NetWorkTool reachabilityForInternetConnection] currentReachabilityStatus];
-    if (status != kNetworkStatus_ReachableViaWiFi) {
-        SharedDataManager.connected = NO;
-    } else{
-//        if (SharedDataManager.deviceName) {
-//            [SLPSharedMLanManager sal:SharedDataManager.deviceName loginCallback:^(SLPDataTransferStatus status, id data) {
-//
-//            }];
-//        }
-        
-    }
+    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameLTCPConnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
 }
 
 - (void)deviceConnected:(NSNotification *)notification {

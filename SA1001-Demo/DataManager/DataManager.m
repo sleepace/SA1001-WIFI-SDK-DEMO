@@ -25,7 +25,7 @@
         _selectItemsNum = 7;
         _assistMusicID = 31038;
         
-        _aidInfo = [[SALAidInfo alloc] init];
+        _aidInfo = [[SA1001AidInfo alloc] init];
         _aidInfo.aidStopDuration = 1;
         _aidInfo.r = 255;
         _aidInfo.b = 0;
@@ -33,6 +33,24 @@
         _aidInfo.brightness = 0;
         _aidInfo.aromaRate = 2;
         _volumn = 0;
+        
+        _deviceName = @"";
+        _token = @"";
+        _channelID = @"";
+        _plat = @"";
+        
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"deviceName"]) {
+            _deviceName = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceName"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"token"]) {
+            _token = [[NSUserDefaults standardUserDefaults] valueForKey:@"token"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"plat"]) {
+            _plat = [[NSUserDefaults standardUserDefaults] valueForKey:@"plat"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"channelID"]) {
+            _channelID = [[NSUserDefaults standardUserDefaults] valueForKey:@"channelID"];
+        }
     }
     
     return self;

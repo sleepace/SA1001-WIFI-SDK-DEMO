@@ -12,7 +12,7 @@
 #import "ControlLightViewController.h"
 #import "ControlAromaViewController.h"
 #import "ControlSleepAidViewController.h"
-#import <SA1001/SA1001.h>
+
 
 @interface ControlViewController ()
 
@@ -58,8 +58,8 @@
 
 - (void)addNotificationObservre {
     NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
-    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameWLANDeviceConnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameWLANDeviceDisconnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameLTCPConnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
 }
 
 - (void)deviceConnected:(NSNotification *)notification {

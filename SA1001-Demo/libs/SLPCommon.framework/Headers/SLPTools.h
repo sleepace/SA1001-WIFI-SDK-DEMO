@@ -77,4 +77,20 @@ static const NSInteger kHttpAddressLength = 128;
 + (UInt8)validDeviceBrightness:(NSInteger)brightness;
 + (UInt8)validDeviceVolume:(NSInteger)volume;
 + (NSString *)MACItemFrom:(UInt8)item;
+
++ (NSString *)getCurrentDeviceModel;
++ (NSString *)getPhoneInfo;
++ (NSString *)addPathComponent:(NSString *)patchComponent toRoot:(NSString *)root;
+
++ (NSString *)convertJasonDictionaryToString:(NSDictionary *)jasonDic;
++ (NSInteger)stringVersionToInterger:(NSString*)ver;
+
+
++ (NSInteger)hexCodeWithString:(NSString *)value;
+
+//将字符串URL编码
++(NSString*)urlEncodeString:(NSString*)string;
++ (NSString *)urlDecodeString:(NSString *)str;
+
+
 @end

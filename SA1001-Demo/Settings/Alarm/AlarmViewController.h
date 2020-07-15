@@ -8,7 +8,7 @@
 
 #import "BaseViewController.h"
 
-#import <SA1001/SALAlarmInfo.h>
+#import <SLPTCP/SA1001AlarmInfo.h>
 
 typedef NS_ENUM(NSInteger, AlarmPageType) {
     AlarmPageType_edit,
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AlarmViewController : BaseViewController
 
-@property (strong, nonatomic) SALAlarmInfo *orignalAlarmData;
+@property (strong, nonatomic) SA1001AlarmInfo *orignalAlarmData;
 
 @property (nonatomic, assign) NSInteger addAlarmID;
 

@@ -21,8 +21,8 @@
 #import "MusicInfo.h"
 #import "TimePickerSelectView.h"
 
-#import <SA1001/SA1001.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SA1001AlarmInfo.h>
+#import <SLPTCP/SLPLTcpCommon.h>
 
 static NSString *const kSection_SetDeviceInfo = @"kSection_SetDeviceInfo";
 
@@ -53,7 +53,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 @property (nonatomic, strong) NSMutableArray *musicList;
 
-@property (strong, nonatomic) SALAlarmInfo *alarmDataNew;
+@property (strong, nonatomic) SA1001AlarmInfo *alarmDataNew;
 
 @end
 
@@ -127,7 +127,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(15, 0, self.view.frame.size.width - 30, 0.001)];
     self.tableView.tableHeaderView = view;
-    self.alarmDataNew = [[SALAlarmInfo alloc] init];
+    self.alarmDataNew = [[SA1001AlarmInfo alloc] init];
     if (self.alarmPageType == AlarmPageType_Add) {
         self.titleLabel.text = LocalizedString(@"add_alarm");
         
@@ -485,19 +485,19 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     return musicName;
 }
 
-- (NSString *)getAlarmTimeStringWithDataModle:(SALAlarmInfo *)dataModel {
+- (NSString *)getAlarmTimeStringWithDataModle:(SA1001AlarmInfo *)dataModel {
     return [SLPUtils timeStringFrom:dataModel.hour minute:dataModel.minute isTimeMode24:[SLPUtils isTimeMode24]];
 }
 
 - (IBAction)saveAction:(UIButton *)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     
     [self showLoadingView];
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName alarmConfig:self.alarmDataNew timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salAlarmConfig:self.alarmDataNew deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         [weakSelf unshowLoadingView];
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
@@ -522,12 +522,12 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 - (void)startPreView
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName startAlarmRreviewVolume:self.alarmDataNew.volume brightness:self.alarmDataNew.brightness aromaRate:self.alarmDataNew.aromaRate musicID:self.alarmDataNew.musicID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salStartAlarmRreviewVolume:self.alarmDataNew.volume brightness:self.alarmDataNew.brightness aromaRate:self.alarmDataNew.aromaRate musicID:self.alarmDataNew.musicID deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -538,12 +538,12 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 - (void)stopPreView
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName stopAlarmRreviewTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salStopAlarmRreviewWithDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -554,12 +554,12 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 -(void)deleteBtnTapped
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName delAlarm:self.alarmDataNew.alarmID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salDelAlarm:self.alarmDataNew.alarmID deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{

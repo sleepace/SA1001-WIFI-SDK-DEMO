@@ -8,12 +8,13 @@
 
 #import "ControlSleepAidViewController.h"
 
-#import <SA1001/SA1001.h>
+
 #import "MusicListViewController.h"
 #import "MusicInfo.h"
 #import "SLPMinuteSelectView.h"
 #import "CustomColorButton.h"
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SLPLTcpCommon.h>
+#import <SLPTCP/SA1001AidInfo.h>
 
 @interface ControlSleepAidViewController ()<UIScrollViewDelegate>
 
@@ -385,13 +386,13 @@
     
     UInt8 vol = volume;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setSleepAidMusicVolume:vol timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetSleepAidMusicVolume:vol deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -402,7 +403,7 @@
 
 - (IBAction)playMusic:(UIButton *)sender {
     __weak typeof(self) weakSelf = self;
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
@@ -432,17 +433,16 @@
 
 - (void)playMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }
     }];
-    
 }
 
 - (void)stopMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffSleepAidMusic:SharedDataManager.assistMusicID callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffSleepAidMusicDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }
@@ -488,12 +488,12 @@
     ligtht.b = b;
     ligtht.w = w;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnSleepAidLight:ligtht brightness:brightness timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOnSleepAidLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
         }else{
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
@@ -517,12 +517,12 @@
 }
 
 - (IBAction)openLightAction:(UIButton *)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffLightTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }
@@ -567,12 +567,12 @@
 
 - (void)setAromaRateWith:(UInt8)rate
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setAssistAroma:rate timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetAssistAroma:rate deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -633,7 +633,7 @@
 //        return;
 //    }
     
-    SALAidInfo *aidInfo = [[SALAidInfo alloc] init];
+    SA1001AidInfo *aidInfo = [[SA1001AidInfo alloc] init];
     aidInfo.r = r;
     aidInfo.g = g;
     aidInfo.b = b;
@@ -643,12 +643,12 @@
     aidInfo.aidStopDuration = SharedDataManager.aidInfo.aidStopDuration;
     aidInfo.volume = 12;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName sleepAidConfig:aidInfo timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSleepAidConfig:aidInfo monitorDevice:@"" monitorDeviceType:SLPDeviceType_None deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{

@@ -12,10 +12,10 @@
 #import "AromaTimeViewController.h"
 #import "CenterSettingViewController.h"
 #import "TitleSubTitleArrowCell.h"
-#import <SA1001/SA1001.h>
+#import <SLPTCP/SLPTCP.h>
+#import <SLPTCP/SLPLTcpCommon.h>
 #import "ResetCell.h"
 #import "AlarmViewController.h"
-#import <SLPMLan/SLPLanTCPCommon.h>
 
 enum {
     Row_Alarm = 0,
@@ -50,8 +50,8 @@ enum {
 
 - (void)addNotificationObservre {
     NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
-    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameBLEDeviceConnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameBLEDeviceDisconnect object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameLTCPConnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
 }
 
 - (void)deviceConnected:(NSNotification *)notification {
@@ -80,7 +80,7 @@ enum {
 
 #pragma mark UITableViewDelegate UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return Row_Bottom;
+    return Row_Bottom-1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -114,21 +114,21 @@ enum {
 
 - (void)resetDevice
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName deviceInitTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
-        }else{
-            [SharedDataManager reset];
-            
-            [Utils showMessage:LocalizedString(@"factory_reset_send") controller:weakSelf];
-        }
-    }];
+//    [SLPSharedMLanManager sal:SharedDataManager.deviceName deviceInitTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        if (status != SLPDataTransferStatus_Succeed) {
+//            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//        }else{
+//            [SharedDataManager reset];
+//            
+//            [Utils showMessage:LocalizedString(@"factory_reset_send") controller:weakSelf];
+//        }
+//    }];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -10,11 +10,9 @@
 
 #import "MainViewController.h"
 
-#import <SLPMLan/SLPMLan.h>
-
 @interface AppDelegate ()
 {
-    NetWorkTool *_conn;
+
 }
 
 @end
@@ -22,7 +20,6 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-//    [self startMonitorNetwork];
     
     CGRect bounds = [[UIScreen mainScreen] bounds];
     self.window = [[UIWindow alloc] initWithFrame:bounds];
@@ -33,12 +30,6 @@
     [self.window makeKeyAndVisible];
     
     return YES;
-}
-
-- (void)startMonitorNetwork
-{
-    _conn = [NetWorkTool reachabilityForInternetConnection];
-    [_conn startNotifier];
 }
 
 @end

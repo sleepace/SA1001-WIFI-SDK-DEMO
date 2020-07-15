@@ -9,11 +9,11 @@
 #import "AromaTimeViewController.h"
 
 #import "TitleSubTitleArrowCell.h"
-#import <SA1001/SALTimeAromaInfo.h>
-#import <SA1001/SA1001.h>
+#import <SLPTCP/SA1001TimeAromaInfo.h>
+
 #import "TimePickerSelectView.h"
 #import "HourMinutePicker.h"
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SLPLTcpCommon.h>
 
 
 @interface AromaTimeViewController ()<UITableViewDataSource, UITableViewDelegate>
@@ -55,7 +55,7 @@
 
 - (IBAction)saveAction:(id)sender {
     
-    SALTimeAromaInfo *info = [[SALTimeAromaInfo alloc] init];
+    SA1001TimeAromaInfo *info = [[SA1001TimeAromaInfo alloc] init];
     info.hour = self.timeDataNew.hour;
     info.minute = self.timeDataNew.minute;
     info.duration = self.timeDataNew.lastMin;
@@ -70,14 +70,14 @@
     
     NSArray *timeList = [NSArray arrayWithObjects:info, nil];
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     
      [self showLoadingView];
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName editeTimeAromaList:timeList timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salEditeTimeAromaList:timeList deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         [weakSelf unshowLoadingView];
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
@@ -178,13 +178,13 @@
 }
 
 - (IBAction)deleteAction:(id)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     UInt64 seqId = [self.timeDataNew.seqId intValue];
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName deleteTimeAroma:seqId timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salDeleteTimeAroma:seqId deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{

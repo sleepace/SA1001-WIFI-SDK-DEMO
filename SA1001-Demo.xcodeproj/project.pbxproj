@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		386DE995D21292C677F3FA3C /* libPods-SA1001-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9419E120369CDAB101DD5939 /* libPods-SA1001-Demo.a */; };
+		4CE6894324BE9DFC00B592FA /* SLPTCP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE6894224BE9DFC00B592FA /* SLPTCP.framework */; };
 		8F29C93422F801AC00075EC6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F29C93322F801AC00075EC6 /* AppDelegate.m */; };
 		8F29C93C22F801AD00075EC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F29C93B22F801AD00075EC6 /* Assets.xcassets */; };
 		8F29C93F22F801AD00075EC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F29C93D22F801AD00075EC6 /* LaunchScreen.storyboard */; };
@@ -15,11 +16,7 @@
 		8F29C94C22F801AD00075EC6 /* SA1001_DemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F29C94B22F801AD00075EC6 /* SA1001_DemoTests.m */; };
 		8F29C95722F801AD00075EC6 /* SA1001_DemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F29C95622F801AD00075EC6 /* SA1001_DemoUITests.m */; };
 		8F29C97122F803A000075EC6 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F29C97022F803A000075EC6 /* libc++.tbd */; };
-		8FB5085622FAB4BF00DC6061 /* BluetoothManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FB5085122FAB4BF00DC6061 /* BluetoothManager.framework */; };
-		8FB5085722FAB4BF00DC6061 /* SA1001.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FB5085222FAB4BF00DC6061 /* SA1001.framework */; };
-		8FB5085822FAB4BF00DC6061 /* BLEWifiConfig.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FB5085322FAB4BF00DC6061 /* BLEWifiConfig.framework */; };
 		8FB5085922FAB4BF00DC6061 /* SLPCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FB5085422FAB4BF00DC6061 /* SLPCommon.framework */; };
-		8FB5085A22FAB4BF00DC6061 /* SLPMLan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FB5085522FAB4BF00DC6061 /* SLPMLan.framework */; };
 		8FB5086222FAB5AC00DC6061 /* TabBarItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5085D22FAB5AC00DC6061 /* TabBarItemCell.xib */; };
 		8FB5086322FAB5AC00DC6061 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5085E22FAB5AC00DC6061 /* MainViewController.xib */; };
 		8FB5086422FAB5AC00DC6061 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5085F22FAB5AC00DC6061 /* MainViewController.m */; };
@@ -107,9 +104,7 @@
 		8FB5097122FAB71D00DC6061 /* ResetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5093322FAB71D00DC6061 /* ResetCell.m */; };
 		8FB5097222FAB71D00DC6061 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5093422FAB71D00DC6061 /* SettingsViewController.xib */; };
 		8FB5097322FAB71D00DC6061 /* DeviceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5093622FAB71D00DC6061 /* DeviceViewController.xib */; };
-		8FB5097422FAB71D00DC6061 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5093722FAB71D00DC6061 /* SearchViewController.m */; };
 		8FB5097522FAB71D00DC6061 /* DeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5093822FAB71D00DC6061 /* DeviceViewController.m */; };
-		8FB5097622FAB71D00DC6061 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5093922FAB71D00DC6061 /* SearchViewController.xib */; };
 		8FB5097722FAB71D00DC6061 /* ControlSleepAidViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5093D22FAB71D00DC6061 /* ControlSleepAidViewController.xib */; };
 		8FB5097822FAB71D00DC6061 /* ControlLightViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5093E22FAB71D00DC6061 /* ControlLightViewController.xib */; };
 		8FB5097922FAB71D00DC6061 /* ControlSleepAidViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5094022FAB71D00DC6061 /* ControlSleepAidViewController.m */; };
@@ -120,8 +115,6 @@
 		8FB5097E22FAB71D00DC6061 /* ControlLightViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5094B22FAB71D00DC6061 /* ControlLightViewController.m */; };
 		8FB5097F22FAB71D00DC6061 /* ControlAromaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5094C22FAB71D00DC6061 /* ControlAromaViewController.m */; };
 		8FB5098022FAB71D00DC6061 /* ControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5094D22FAB71D00DC6061 /* ControlViewController.m */; };
-		8FB5098422FBD4A500DC6061 /* ConfigWifiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB5098222FBD4A500DC6061 /* ConfigWifiViewController.m */; };
-		8FB5098522FBD4A500DC6061 /* ConfigWifiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FB5098322FBD4A500DC6061 /* ConfigWifiViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +135,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4CE6894224BE9DFC00B592FA /* SLPTCP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SLPTCP.framework; sourceTree = "<group>"; };
 		50F5751A79545FB33A45C269 /* Pods-SA1001-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SA1001-Demo.debug.xcconfig"; path = "Target Support Files/Pods-SA1001-Demo/Pods-SA1001-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		567DAF156B28DB8CE545C5AF /* Pods-SA1001-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SA1001-Demo.release.xcconfig"; path = "Target Support Files/Pods-SA1001-Demo/Pods-SA1001-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		8F29C92F22F801AC00075EC6 /* SA1001-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SA1001-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,11 +153,7 @@
 		8F29C95822F801AD00075EC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8F29C97022F803A000075EC6 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		8F29C98022F805F600075EC6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		8FB5085122FAB4BF00DC6061 /* BluetoothManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BluetoothManager.framework; sourceTree = "<group>"; };
-		8FB5085222FAB4BF00DC6061 /* SA1001.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SA1001.framework; sourceTree = "<group>"; };
-		8FB5085322FAB4BF00DC6061 /* BLEWifiConfig.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BLEWifiConfig.framework; sourceTree = "<group>"; };
 		8FB5085422FAB4BF00DC6061 /* SLPCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SLPCommon.framework; sourceTree = "<group>"; };
-		8FB5085522FAB4BF00DC6061 /* SLPMLan.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SLPMLan.framework; sourceTree = "<group>"; };
 		8FB5085C22FAB5AC00DC6061 /* TabBarItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarItemCell.h; sourceTree = "<group>"; };
 		8FB5085D22FAB5AC00DC6061 /* TabBarItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TabBarItemCell.xib; sourceTree = "<group>"; };
 		8FB5085E22FAB5AC00DC6061 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
@@ -306,11 +296,8 @@
 		8FB5093322FAB71D00DC6061 /* ResetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetCell.m; sourceTree = "<group>"; };
 		8FB5093422FAB71D00DC6061 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
 		8FB5093622FAB71D00DC6061 /* DeviceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeviceViewController.xib; sourceTree = "<group>"; };
-		8FB5093722FAB71D00DC6061 /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		8FB5093822FAB71D00DC6061 /* DeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceViewController.m; sourceTree = "<group>"; };
-		8FB5093922FAB71D00DC6061 /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
 		8FB5093A22FAB71D00DC6061 /* DeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceViewController.h; sourceTree = "<group>"; };
-		8FB5093B22FAB71D00DC6061 /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		8FB5093D22FAB71D00DC6061 /* ControlSleepAidViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ControlSleepAidViewController.xib; sourceTree = "<group>"; };
 		8FB5093E22FAB71D00DC6061 /* ControlLightViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ControlLightViewController.xib; sourceTree = "<group>"; };
 		8FB5093F22FAB71D00DC6061 /* ControlLightViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlLightViewController.h; sourceTree = "<group>"; };
@@ -327,9 +314,6 @@
 		8FB5094B22FAB71D00DC6061 /* ControlLightViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlLightViewController.m; sourceTree = "<group>"; };
 		8FB5094C22FAB71D00DC6061 /* ControlAromaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlAromaViewController.m; sourceTree = "<group>"; };
 		8FB5094D22FAB71D00DC6061 /* ControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlViewController.m; sourceTree = "<group>"; };
-		8FB5098122FBD4A500DC6061 /* ConfigWifiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigWifiViewController.h; sourceTree = "<group>"; };
-		8FB5098222FBD4A500DC6061 /* ConfigWifiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigWifiViewController.m; sourceTree = "<group>"; };
-		8FB5098322FBD4A500DC6061 /* ConfigWifiViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfigWifiViewController.xib; sourceTree = "<group>"; };
 		8FB5099B230253AE00DC6061 /* SA1001-Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SA1001-Demo.entitlements"; sourceTree = "<group>"; };
 		8FB509A623067AB300DC6061 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8FB509A723067AB800DC6061 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -341,12 +325,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8FB5085A22FAB4BF00DC6061 /* SLPMLan.framework in Frameworks */,
-				8FB5085722FAB4BF00DC6061 /* SA1001.framework in Frameworks */,
+				4CE6894324BE9DFC00B592FA /* SLPTCP.framework in Frameworks */,
 				8FB5085922FAB4BF00DC6061 /* SLPCommon.framework in Frameworks */,
 				8F29C97122F803A000075EC6 /* libc++.tbd in Frameworks */,
-				8FB5085622FAB4BF00DC6061 /* BluetoothManager.framework in Frameworks */,
-				8FB5085822FAB4BF00DC6061 /* BLEWifiConfig.framework in Frameworks */,
 				386DE995D21292C677F3FA3C /* libPods-SA1001-Demo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -458,11 +439,8 @@
 		8F29C97222F803D800075EC6 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				8FB5085322FAB4BF00DC6061 /* BLEWifiConfig.framework */,
-				8FB5085122FAB4BF00DC6061 /* BluetoothManager.framework */,
-				8FB5085222FAB4BF00DC6061 /* SA1001.framework */,
+				4CE6894224BE9DFC00B592FA /* SLPTCP.framework */,
 				8FB5085422FAB4BF00DC6061 /* SLPCommon.framework */,
-				8FB5085522FAB4BF00DC6061 /* SLPMLan.framework */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -793,12 +771,6 @@
 				8FB5093A22FAB71D00DC6061 /* DeviceViewController.h */,
 				8FB5093822FAB71D00DC6061 /* DeviceViewController.m */,
 				8FB5093622FAB71D00DC6061 /* DeviceViewController.xib */,
-				8FB5093B22FAB71D00DC6061 /* SearchViewController.h */,
-				8FB5093722FAB71D00DC6061 /* SearchViewController.m */,
-				8FB5093922FAB71D00DC6061 /* SearchViewController.xib */,
-				8FB5098122FBD4A500DC6061 /* ConfigWifiViewController.h */,
-				8FB5098222FBD4A500DC6061 /* ConfigWifiViewController.m */,
-				8FB5098322FBD4A500DC6061 /* ConfigWifiViewController.xib */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -963,7 +935,6 @@
 				8FB5095D22FAB71D00DC6061 /* AlarmListViewController.xib in Resources */,
 				8FB5096422FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.xib in Resources */,
 				8FB5095422FAB71D00DC6061 /* AromaTimeViewController.xib in Resources */,
-				8FB5098522FBD4A500DC6061 /* ConfigWifiViewController.xib in Resources */,
 				8FB508ED22FAB5F000DC6061 /* common_nav_btn_back_white_nor@3x.png in Resources */,
 				8FB508D922FAB5F000DC6061 /* HourMinutePicker.xib in Resources */,
 				8FB5097322FAB71D00DC6061 /* DeviceViewController.xib in Resources */,
@@ -972,7 +943,6 @@
 				8FB508E022FAB5F000DC6061 /* LaunchScreen.strings in Resources */,
 				8FB508EB22FAB5F000DC6061 /* list_icon_select@3x.png in Resources */,
 				8FB508E822FAB5F000DC6061 /* common_list_icon_leftarrow@3x.png in Resources */,
-				8FB5097622FAB71D00DC6061 /* SearchViewController.xib in Resources */,
 				8FB5097222FAB71D00DC6061 /* SettingsViewController.xib in Resources */,
 				8FB508EC22FAB5F000DC6061 /* device_btn_refresh_nor@2x.png in Resources */,
 				8FB508DC22FAB5F000DC6061 /* SLPMinuteSelectView.xib in Resources */,
@@ -1069,7 +1039,6 @@
 				8FB5086522FAB5AC00DC6061 /* TabBarItemCell.m in Sources */,
 				8FB508D522FAB5F000DC6061 /* HorizontalDashLine.m in Sources */,
 				8FB5096A22FAB71D00DC6061 /* TitleSwitchCell.m in Sources */,
-				8FB5097422FAB71D00DC6061 /* SearchViewController.m in Sources */,
 				8FB508D822FAB5F000DC6061 /* HourMinutePicker.m in Sources */,
 				8FB508CE22FAB5F000DC6061 /* SLPPopBaseView.m in Sources */,
 				8FB5095522FAB71D00DC6061 /* AromaTimeViewController.m in Sources */,
@@ -1081,7 +1050,6 @@
 				8FB5096722FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.m in Sources */,
 				8FB508CC22FAB5F000DC6061 /* DatePickerPopUpView.m in Sources */,
 				8FB5096C22FAB71D00DC6061 /* SLPLabelFooter.m in Sources */,
-				8FB5098422FBD4A500DC6061 /* ConfigWifiViewController.m in Sources */,
 				8FB508E322FAB5F000DC6061 /* Coordinate.m in Sources */,
 				8FB5096F22FAB71D00DC6061 /* WeekdaySelectViewController.m in Sources */,
 				8FB5096122FAB71D00DC6061 /* AlarmDataModel.m in Sources */,
@@ -1320,15 +1288,9 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/BluetoothManager.framework/BluetoothManager",
-					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/BLEWifiConfig.framework/BLEWifiConfig",
-					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/SA1001.framework/SA1001",
-					"-force_load",
 					"$(SRCROOT)/SA1001-Demo/libs/SLPCommon.framework/SLPCommon",
 					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/SLPMLan.framework/SLPMLan",
+					"$(SRCROOT)/SA1001-Demo/libs/SLPTCP.framework/SLPTCP",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "medica.SA1001-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1359,15 +1321,9 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/BluetoothManager.framework/BluetoothManager",
-					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/BLEWifiConfig.framework/BLEWifiConfig",
-					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/SA1001.framework/SA1001",
-					"-force_load",
 					"$(SRCROOT)/SA1001-Demo/libs/SLPCommon.framework/SLPCommon",
 					"-force_load",
-					"$(SRCROOT)/SA1001-Demo/libs/SLPMLan.framework/SLPMLan",
+					"$(SRCROOT)/SA1001-Demo/libs/SLPTCP.framework/SLPTCP",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "medica.SA1001-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";

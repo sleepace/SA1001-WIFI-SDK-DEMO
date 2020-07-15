@@ -8,9 +8,9 @@
 
 #import "ControlLightViewController.h"
 
-#import <SA1001/SA1001.h>
-#import <SA1001/SALWorkStatus.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+
+#import <SLPTCP/SLPLTcpCommon.h>
+#import <SLPTCP/SA1001WorkMode.h>
 
 @interface ControlLightViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *colorRTextField;
@@ -150,12 +150,12 @@
         ligtht.b = b;
         ligtht.w = w;
         
-        if (![SLPLanTCPCommon isReachableViaWiFi]) {
+        if (![SLPLTcpCommon isReachableViaWiFi]) {
             [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
             return;
         }
         __weak typeof(self) weakSelf = self;
-        [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnColorLight:ligtht brightness:brightness timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOnColorLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             }
@@ -178,28 +178,26 @@
         return;
     }
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName lightBrightness:brightness timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salLightBrightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }
     }];
 }
 
-
-
 - (IBAction)openLightAction:(UIButton *)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffLightTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }

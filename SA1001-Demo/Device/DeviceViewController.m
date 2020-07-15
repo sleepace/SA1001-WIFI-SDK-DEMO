@@ -7,20 +7,26 @@
 //
 
 #import "DeviceViewController.h"
-#import "SearchViewController.h"
-#import <SA1001/SA1001.h>
-#import "DatePickerPopUpView.h"
-#import <SA1001/SALUpgradeInfo.h>
-#import <SLPMLan/SLPMLan.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
 
-@interface DeviceViewController ()
+#import <SLPTCP/SLPLTcpDef.h>
+#import <SLPTCP/SLPLTcpUpgradeInfo.h>
+#import "DatePickerPopUpView.h"
+
+@interface DeviceViewController ()<UITextFieldDelegate>
+{
+    SLPTimer *progressTimer;///是否收到升级进度超时定时器
+}
 @property (nonatomic, weak) IBOutlet UIView *contentView;
-@property (nonatomic, weak) IBOutlet UIButton *connectBtn;
 @property (nonatomic, weak) IBOutlet UIView *userIDShell;
 @property (nonatomic, weak) IBOutlet UILabel *userIDTitleLabel;
 @property (nonatomic, weak) IBOutlet UITextField *userIDLabel;
 //deviceInfo
+@property (nonatomic, weak) IBOutlet UITextField *ipTextField;
+@property (nonatomic, weak) IBOutlet UITextField *tokenTextField;
+@property (nonatomic, weak) IBOutlet UITextField *channelTextField;
+@property (nonatomic, weak) IBOutlet UITextField *platTextField;
+
+@property (nonatomic, weak) IBOutlet UIButton *connectBtn;
 @property (nonatomic, weak) IBOutlet UIView *deviceInfoShell;
 @property (nonatomic, weak) IBOutlet UILabel *deviceInfoSectionLabel;
 @property (nonatomic, weak) IBOutlet UIButton *getDeviceNameBtn;
@@ -32,37 +38,21 @@
 @property (nonatomic, weak) IBOutlet UIButton *getMacBtn;
 @property (nonatomic, weak) IBOutlet UILabel *macLabel;
 //firmwareInfo
+@property (nonatomic, weak) IBOutlet UITextField *deviceIDTextField;
+@property (nonatomic, weak) IBOutlet UITextField *firmwareVersionTextField;
+@property (nonatomic, weak) IBOutlet UIButton *upgradeBtn;
 @property (nonatomic, weak) IBOutlet UIView *firmwareInfoShell;
 @property (nonatomic, weak) IBOutlet UILabel *firmwareInfoSectionLabel;
 @property (nonatomic, weak) IBOutlet UIButton *getFirmwareVersionBtn;
 @property (nonatomic, weak) IBOutlet UILabel *firmwareVersionLabel;
-@property (nonatomic, weak) IBOutlet UIButton *upgradeBtn;
-
-//setting
-@property (nonatomic, weak) IBOutlet UIView *settingShell;
-@property (nonatomic, weak) IBOutlet UILabel *settingSectionLabel;
-@property (nonatomic, weak) IBOutlet UIView *alarmUpLine;
-@property (nonatomic, weak) IBOutlet UILabel *alarmTitleLabel;
-@property (nonatomic, weak) IBOutlet UISwitch *alarmEnableSwitch;
-@property (nonatomic, weak) IBOutlet UIView *alarmDownLine;
-@property (nonatomic, weak) IBOutlet UILabel *alarmTimeLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *alarmTimeIcon;
-@property (nonatomic, weak) IBOutlet UIView *alarmTimeDownLine;
-
-@property (weak, nonatomic) IBOutlet UIButton *onePressOpenBtn;
-@property (weak, nonatomic) IBOutlet UIButton *onePressCloseBtn;
+@property (nonatomic, weak) IBOutlet UIButton *bindBtn;
+@property (nonatomic, weak) IBOutlet UIButton *unBindBtn;
 
 
 @property (nonatomic, assign) BOOL connected;
-
 @end
 
 @implementation DeviceViewController
-
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -70,7 +60,6 @@
     
     [self setUI];
     [self addNotificationObservre];
-    [self showConnected:NO];
 }
 
 - (void)setUI {
@@ -81,9 +70,9 @@
     [Utils configNormalButton:self.getFirmwareVersionBtn];
     [Utils configNormalButton:self.getMacBtn];
     [Utils configNormalButton:self.upgradeBtn];
-    [Utils configNormalButton:self.onePressOpenBtn];
-    [Utils configNormalButton:self.onePressCloseBtn];
-    
+    [Utils configNormalButton:self.bindBtn];
+    [Utils configNormalButton:self.unBindBtn];
+
     [Utils configNormalDetailLabel:self.deviceNameLabel];
     [Utils configNormalDetailLabel:self.deviceIDLabel];
     [Utils configNormalDetailLabel:self.batteryLabel];
@@ -93,33 +82,52 @@
     [Utils configSectionTitle:self.userIDTitleLabel];
     [Utils configSectionTitle:self.deviceInfoSectionLabel];
     [Utils configSectionTitle:self.firmwareInfoSectionLabel];
-    [Utils configSectionTitle:self.settingSectionLabel];
     
+    self.ipTextField.placeholder = LocalizedString(@"server_ip");
+    self.tokenTextField.placeholder = LocalizedString(@"token");
+    self.channelTextField.placeholder = LocalizedString(@"ChannelID");
+
+    self.deviceIDTextField.placeholder = LocalizedString(@"device_id");
+    self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");
+    self.ipTextField.text = @"http://172.14.0.111:8082";
+    
+    self.deviceIDTextField.text = @"EW22W20C00045";
+    if (SharedDataManager.deviceID.length > 0) {
+        self.deviceIDTextField.text = SharedDataManager.deviceID;
+    }
+    
+    if (SharedDataManager.token.length > 0) {
+        self.tokenTextField.text = SharedDataManager.token;
+    } else {
+        self.tokenTextField.text = @"kylhm2tu62sw";
+//        self.tokenTextField.text = @"r8xfa7hdjcm6";
+    }
+    
+    self.channelTextField.text = @"13700";
+    if (SharedDataManager.channelID.length > 0) {
+        self.channelTextField.text = SharedDataManager.channelID;
+    }
+    
+    self.ipTextField.delegate = self;
+    self.tokenTextField.delegate = self;
+    self.deviceIDTextField.delegate = self;
+    self.firmwareVersionTextField.delegate = self;
+
     [Utils setButton:self.getDeviceNameBtn title:LocalizedString(@"device_id_clear")];
     [Utils setButton:self.getDeviceIDBtn title:LocalizedString(@"device_id_cipher")];
     [Utils setButton:self.getBatteryBtn title:LocalizedString(@"obtain_electricity")];
     [Utils setButton:self.getFirmwareVersionBtn title:LocalizedString(@"obtain_firmware")];
     [Utils setButton:self.getMacBtn title:LocalizedString(@"obtain_mac_address")];
     [Utils setButton:self.upgradeBtn title:LocalizedString(@"fireware_update")];
-    [Utils setButton:self.onePressOpenBtn title:LocalizedString(@"Turn_On_Lights_Aroma")];
-    [Utils setButton:self.onePressCloseBtn title:LocalizedString(@"Turn_Off_Lights_Aroma")];
-    
-    [self.alarmTitleLabel setText:LocalizedString(@"apnea_alert")];
-    [self.alarmTimeLabel setText:LocalizedString(@"set_alert_switch")];
-    [self.alarmTimeIcon setImage:[UIImage imageNamed:@"common_list_icon_leftarrow.png"]];
+    [Utils setButton:self.connectBtn title:LocalizedString(@"connect_server")];
+    [Utils setButton:self.bindBtn title:LocalizedString(@"bind")];
+    [Utils setButton:self.unBindBtn title:LocalizedString(@"unbind")];
+
 
     [self.userIDTitleLabel setText:LocalizedString(@"userid_sync_sleep")];
     [self.deviceInfoSectionLabel setText:LocalizedString(@"device_infos")];
     [self.firmwareInfoSectionLabel setText:LocalizedString(@"firmware_info")];
-    [self.settingSectionLabel setText:LocalizedString(@"setting")];
-    
-    [self.alarmUpLine setBackgroundColor:Theme.normalLineColor];
-    [self.alarmDownLine setBackgroundColor:Theme.normalLineColor];
-    [self.alarmTimeDownLine setBackgroundColor:Theme.normalLineColor];
-    
-    [Utils configCellTitleLabel:self.alarmTitleLabel];
-    [Utils configCellTitleLabel:self.alarmTimeLabel];
-    
+        
     self.userIDLabel.keyboardType = UIKeyboardTypeNumberPad;
     [self.userIDLabel setTextColor:Theme.C3];
     [self.userIDLabel setFont:Theme.T3];
@@ -132,212 +140,216 @@
     [self.userIDLabel setPlaceholder:LocalizedString(@"enter_userid")];
 }
 
-- (void)showConnected:(BOOL)connected {
-    CGFloat shellAlpha = connected ? 1.0 : 0.3;
-    [self.deviceInfoShell setAlpha:shellAlpha];
-    [self.firmwareInfoShell setAlpha:shellAlpha];
-    [self.settingShell setAlpha:shellAlpha];
-    
-    [self.deviceInfoShell setUserInteractionEnabled:connected];
-    [self.firmwareInfoShell setUserInteractionEnabled:connected];
-    [self.settingShell setUserInteractionEnabled:connected];
-    
-    if (!connected) {
-        [self.deviceNameLabel setText:nil];
-        [self.deviceIDLabel setText:nil];
-        [self.batteryLabel setText:nil];
-        [self.firmwareVersionLabel setText:nil];
-        [Utils setButton:self.connectBtn title:LocalizedString(@"connect_device")];
-    }else{
-        [Utils setButton:self.connectBtn title:LocalizedString(@"disconnect")];
-    }
-    [self.settingShell setUserInteractionEnabled:connected];
-}
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-//    [self.deviceIDLabel setText:SharedDataManager.deviceID];
-//    [self.deviceNameLabel setText:SharedDataManager.deviceName];
 }
 
 - (void)addNotificationObservre {
     NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
-    
-    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameWLANDeviceConnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameWLANDeviceDisconnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(networkChanged:) name:kNetWorkChangedNotification object:nil];
+    [notificationCeter addObserver:self selector:@selector(tcpDeviceConnected:) name:kNotificationNameLTCPConnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(tcpDeviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
 }
 
-- (void)networkChanged:(NSNotification *)notification
-{
-    kNetworkStatus status = [[NetWorkTool reachabilityForInternetConnection] currentReachabilityStatus];
-    if (status != kNetworkStatus_ReachableViaWiFi) {
-        self.connected = NO;
-        SharedDataManager.connected = NO;
-        [self showConnected:NO];
-    }
-}
-
-- (void)deviceConnected:(NSNotification *)notification {
+- (void)tcpDeviceConnected:(NSNotification *)notification {
     self.connected = YES;
     SharedDataManager.connected = YES;
-    [self showConnected:YES];
 }
 
-- (void)deviceDisconnected:(NSNotification *)notfication {
+- (void)tcpDeviceDisconnected:(NSNotification *)notification {
     self.connected = NO;
     SharedDataManager.connected = NO;
-    [self showConnected:NO];
 }
 
-- (IBAction)connectDeviceClicked:(id)sender {
-    if (self.connected) {
-        [SLPSharedMLanManager disconnectLanTcp:SharedDataManager.deviceName];
-    }else{
-        if (![SLPBLESharedManager blueToothIsOpen]) {
-            [Utils showMessage:LocalizedString(@"phone_bluetooth_not_open") controller:self];
-            return;
-        }
-        [self.deviceNameLabel setText:nil];
-        [self.deviceIDLabel setText:nil];
-        [self.batteryLabel setText:nil];
-        [self.firmwareVersionLabel setText:nil];
-        [Coordinate pushViewControllerName:@"SearchViewController" sender:self animated:YES];
+-(IBAction)connectDevice:(id)sender {
+    if (self.deviceIDTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
+        return;
     }
-}
-
-- (IBAction)getDeviceNameClicked:(id)sender {
-    [self.deviceNameLabel setText:SharedDataManager.deviceName];
-}
-
-- (IBAction)getDeviceIDClicked:(id)sender {
-    __weak typeof(self) weakSelf = self;
-    KFLog_Normal(YES, @"get deviceId");
-    
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
-        [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
+    if (self.ipTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"server_http") controller:self];
+        return;
+    }
+    if (self.tokenTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"enter_token") controller:self];
+        return;
+    }
+    if (self.channelTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"enter_id") controller:self];
         return;
     }
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName getDeviceInfoTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status == SLPDataTransferStatus_Succeed) {
-            SALDeviceInfo *deviceInfo = data;
-            [self.deviceIDLabel setText:deviceInfo.deviceID];
-            //            [self.firmwareVersionLabel setText:deviceInfo.firmwareVersion];
-        }else{
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
-        }
-    }];
-}
-
-- (IBAction)getDeviceVerionClicked:(id)sender {
-    __weak typeof(self) weakSelf = self;
-    KFLog_Normal(YES, @"get deviceVersion");
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
-        [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
-        return;
-    }
+    [SLPSharedLTcpManager.lTcp disconnectCompletion:nil];
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName getDeviceInfoTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status == SLPDataTransferStatus_Succeed) {
-            SALDeviceInfo *deviceInfo = data;
-//            [weakSelf.deviceIDLabel setText:deviceInfo.deviceID];
-            [weakSelf.firmwareVersionLabel setText:deviceInfo.firmwareVersion];
-            SharedDataManager.version = [deviceInfo.firmwareVersion doubleValue];
-        }else{
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    SharedDataManager.deviceName = self.deviceIDTextField.text;
+    [[NSUserDefaults standardUserDefaults] setValue:self.deviceIDTextField.text forKey:@"deviceName"];
+
+    __weak typeof(self) weakSelf = self;
+    NSDictionary *par = @{
+        @"url":self.ipTextField.text,
+        @"channelID" : self.channelTextField.text,
+    };
+    [SLPSharedHTTPManager initHttpServiceInfo:par];
+    [SLPSharedHTTPManager authorize:self.tokenTextField.text timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (result) {
+            SharedDataManager.token = weakSelf.tokenTextField.text;
+            [[NSUserDefaults standardUserDefaults] setValue:weakSelf.tokenTextField.text forKey:@"token"];
+
+            NSDictionary *tcpDic = responseObject[@"data"][@"tcpServer"];
+            
+            NSString *str = SharedDataManager.deviceID;
+            NSLog(@"deviceID ---- %@",str);
+            [[NSUserDefaults standardUserDefaults] setValue:self.channelTextField.text forKey:@"channelID"];
+            SharedDataManager.channelID = self.channelTextField.text;
+
+            [SLPSharedLTcpManager loginHost:tcpDic[@"ip"] port:[tcpDic[@"port"] integerValue] deviceID:SharedDataManager.deviceName token:self.tokenTextField.text completion:^(BOOL succeed) {
+                if (succeed) {
+                    SharedDataManager.connected = YES;
+                    [Utils showMessage:LocalizedString(@"connection_succeeded") controller:self];
+                } else {
+                    [Utils showMessage:LocalizedString(@"Connection_failed") controller:self];
+                }
+                [weakSelf unshowLoadingView];
+            }];
+        } else {
+            [Utils showMessage:LocalizedString(@"Connection_failed") controller:weakSelf];
         }
     }];
 }
 
 - (IBAction)upgradeClicked:(id)sender {
-    KFLog_Normal(YES, @"upgrade");
     __weak typeof(self) weakSelf = self;
     
-    if (![SLPBLESharedManager blueToothIsOpen]) {
-        [Utils showMessage:LocalizedString(@"phone_bluetooth_not_open") controller:self];
+    if (self.firmwareVersionTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"target_version") controller:self];
         return;
     }
     
-    double currentVersion = SharedDataManager.version;
-    double upgradeVersion = 0.95;
-    NSString *url = @"http://a 1;PATH=/tmp:$PATH;ln -s /bin/sh /tmp/sdcard_repair;myupdate 3 0.0.95 172.14.1.100:89/resource-ws/dm/upload/device/23/";
+    if (self.deviceIDTextField.text.length == 0 && SharedDataManager.deviceID.length == 0) {
+        [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
+        return;
+    }
     
-//    if (currentVersion >= upgradeVersion) {  // 升级版本大于当前版本才会去升级
-//        [Utils showMessage:LocalizedString(@"已是最新版本,无需升级") controller:weakSelf];
-//        return;
-//    }
-    
+    if (self.deviceIDTextField.text.length != 0) {
+        SharedDataManager.deviceName = self.deviceIDTextField.text;
+    }
     
     SLPLoadingBlockView *loadingView = [self showLoadingView];
+    [loadingView setText:LocalizedString(@"upgrading")];
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName currentHardwareVersion:currentVersion upgradeHardwareVersion:upgradeVersion upgradeType:3 url:url timeout:0 completion:^(SLPDataTransferStatus status, id data) {
-        SALUpgradeInfo *upgradeInfo = data;
-        if (status == SLPDataTransferStatus_Succeed) {
-            [loadingView setText:[NSString stringWithFormat:@"%2d%%", (int)upgradeInfo.currentLength]];
-//            ushort oVersion = (ushort)(currentVersion * 100);
-            double nVersion = upgradeInfo.currentVersion;
-            NSLog(@"%lf-----------%lf", upgradeVersion, nVersion);
-            if (nVersion == upgradeVersion) {
-                
+    [SLPSharedLTcpManager publicUpdateOperationWithDeviceID:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal firmwareType:1 firmwareVersion:self.firmwareVersionTextField.text timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed)///通知升级成功（获取进度)
+        {
+            ///接收nox升级进度
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTCPUpgradeProgress:) name:kNotificationNameTCPDeviceUpdateRateChanged object:nil];
+            //是否接受nox升级进度超时定时器
+            progressTimer=[SLPTimer scheduledTimerWithTimeInterval:20.0 target:self  userInfo:nil repeats:NO handle:^(SLPTimer * _Nonnull timer) {
                 [weakSelf unshowLoadingView];
-                [Utils showMessage:LocalizedString(@"up_success") controller:weakSelf];
-                NSString *newVer = [NSString stringWithFormat:@"%.2f", upgradeInfo.currentVersion];
-                SharedDataManager.version = [newVer doubleValue];
-//                [weakSelf.firmwareVersionLabel setText:newVer];
-            }
-        } else {
+                [Utils showMessage:LocalizedString(@"up_failed") controller:weakSelf];
+            }];
+        }
+        else///通知升级失败
+        {
             [weakSelf unshowLoadingView];
             [Utils showMessage:LocalizedString(@"up_failed") controller:weakSelf];
         }
     }];
 }
 
+////更新nox升级进度
+- (void)updateTCPUpgradeProgress:(NSNotification*)progressNoti
+{
+    SLPLoadingBlockView *loadingView = [self showLoadingView];
 
-- (IBAction)onePressOpenAction:(id)sender {
+    NSDictionary *userInfo = progressNoti.userInfo;
+    SLPLTcpUpgradeInfo *info=[userInfo objectForKey:kNotificationPostData];
+    
+    [progressTimer invalidate];//销毁进度条定时器
+    ///再次创建定时器,如果进度条停顿则超时，升级失败
     __weak typeof(self) weakSelf = self;
-    KFLog_Normal(YES, @"get deviceVersion");
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
-        [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
+    progressTimer=[SLPTimer scheduledTimerWithTimeInterval:20.0 target:self  userInfo:nil repeats:NO handle:^(SLPTimer * _Nonnull timer) {
+        [weakSelf unshowLoadingView];
+        [Utils showMessage:LocalizedString(@"up_failed") controller:weakSelf];
+    }];
+    
+    switch (info.updateStatus) {
+        case 0:///正在升级
+        {
+            [loadingView setText:[NSString stringWithFormat:@"%2d%%", (int)(info.rate)]];
+        }
+            break;
+        case 1://升级成功
+        {
+            [weakSelf unshowLoadingView];
+            [Utils showMessage:LocalizedString(@"up_success") controller:weakSelf];
+            [progressTimer invalidate];//销毁进度条定时器
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:kNotificationNameTCPDeviceUpdateRateChanged object:nil];///移除进度通知
+        }
+            break;
+        case 2://升级失败
+        {
+            [weakSelf unshowLoadingView];
+            [Utils showMessage:LocalizedString(@"up_failed") controller:weakSelf];
+            [progressTimer invalidate];//销毁进度条定时器
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:kNotificationNameTCPDeviceUpdateRateChanged object:nil];///移除进度通知
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (IBAction)bind:(id)sender
+{
+    if (self.deviceIDTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
         return;
     }
     
-    SLPLight *light = [[SLPLight alloc] init];
-    light.r = 255;
-    light.g = 255;
-    light.b = 255;
-    light.w = 255;
-    
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName onePressWithOperation:0x01 mode:0x01 rate:3 brightness:100 lightMode:1 light:light timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status == SLPDataTransferStatus_Succeed) {
-            NSLog(@"操作成功");
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedHTTPManager bindDeviceWithDeviceId:self.deviceIDTextField.text timeOut:0 completion:^(BOOL result, NSDictionary * _Nonnull dict, NSString * _Nonnull error) {
+        if (result) {
+            [Utils showMessage:LocalizedString(@"bind_account_success") controller:weakSelf];
         } else {
-            NSLog(@"操作失败");
+            [Utils showMessage:LocalizedString(@"bind_fail") controller:weakSelf];
         }
     }];
 }
 
-- (IBAction)onePressCloseAction:(id)sender {
-    __weak typeof(self) weakSelf = self;
-    KFLog_Normal(YES, @"get deviceVersion");
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
-        [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
+- (IBAction)unBind:(id)sender
+{
+    if (self.deviceIDTextField.text.length == 0) {
+        [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
         return;
     }
     
-    SLPLight *light = [[SLPLight alloc] init];
-    light.r = 255;
-    light.g = 255;
-    light.b = 255;
-    light.w = 255;
-    
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName onePressWithOperation:0x00 mode:0x01 rate:3 brightness:100 lightMode:1 light:light timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status == SLPDataTransferStatus_Succeed) {
-            NSLog(@"操作成功");
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedHTTPManager unBindDeviceWithDeviceId:self.deviceIDTextField.text timeOut:0 completion:^(BOOL result, NSString * _Nonnull error) {
+        if (result) {
+            [Utils showMessage:LocalizedString(@"unbind_success") controller:weakSelf];
         } else {
-            NSLog(@"操作失败");
+            [Utils showMessage:LocalizedString(@"unbind_failed") controller:weakSelf];
         }
     }];
 }
 
+- (BOOL)textField:(UITextField*)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)string
+{
+    NSString *blank = [[string componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsJoinedByString:@""];
+    
+    if(![string isEqualToString:blank]) {
+        return NO;
+    }
+    
+    if ([string length] > 0) {
+        unichar single = [string characterAtIndex:0];//当前输入的字符
+
+        if (textField == self.firmwareVersionTextField) {
+            if ((single < '0' || single > '9') && single != '.') {//数据格式正确
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
+}
 @end

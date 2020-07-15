@@ -1,0 +1,6 @@
+framework module SA1001 {
+  umbrella header "SA1001.h"
+
+  export *
+  module * { export * }
+}

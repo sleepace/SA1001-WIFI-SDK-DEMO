@@ -1,0 +1,6 @@
+framework module SLPMLan {
+  umbrella header "SLPMLan.h"
+
+  export *
+  module * { export * }
+}

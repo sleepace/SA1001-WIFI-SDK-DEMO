@@ -28,14 +28,6 @@
 		<data>
 		rrn6KpsfqV67+90WMed/00/OB18=
 		</data>
-		<key>Headers/GCDAsyncSocket.h</key>
-		<data>
-		/lZI/cTHU4xM/6tkj6KfMo4B0Ls=
-		</data>
-		<key>Headers/GCDAsyncUdpSocket.h</key>
-		<data>
-		0481iNPobQghjVX74kpxRbfXKpI=
-		</data>
 		<key>Headers/SA1001AidInfo.h</key>
 		<data>
 		1IyPa7cztucor9QE7NWehGViVxo=
@@ -110,7 +102,7 @@
 		</data>
 		<key>Headers/SLPTCP.h</key>
 		<data>
-		EGqftftl2HfijEEfKmAFE7MyPh0=
+		CkrxGw18n8f/LlDYBwbEUlYnAm0=
 		</data>
 		<key>Headers/SLPTCPBaseEntity.h</key>
 		<data>
@@ -227,28 +219,6 @@
 			<key>hash2</key>
 			<data>
 			zQZo3rBkbig/elZVqeNcYy4TQBHv6CYW0dzQ9H1LVaI=
-			</data>
-		</dict>
-		<key>Headers/GCDAsyncSocket.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			/lZI/cTHU4xM/6tkj6KfMo4B0Ls=
-			</data>
-			<key>hash2</key>
-			<data>
-			aj3NHnhkd9Qjyn4gxK2hqn+1sbqN8Eeb+7Y3xHU9i+4=
-			</data>
-		</dict>
-		<key>Headers/GCDAsyncUdpSocket.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			0481iNPobQghjVX74kpxRbfXKpI=
-			</data>
-			<key>hash2</key>
-			<data>
-			BPXmqJHe3cPbFYen2pEUSVYA37rH88XjcGHpymyqAn0=
 			</data>
 		</dict>
 		<key>Headers/SA1001AidInfo.h</key>
@@ -453,11 +423,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			EGqftftl2HfijEEfKmAFE7MyPh0=
+			CkrxGw18n8f/LlDYBwbEUlYnAm0=
 			</data>
 			<key>hash2</key>
 			<data>
-			wQRdS+owS8uV8A9fhP/F1ckplvqzD6hMQ1LKz5xwP8E=
+			vn4wiACFuPMSfoqsEWa+Me4fE7cmyA+pZYtz2Avz2Yo=
 			</data>
 		</dict>
 		<key>Headers/SLPTCPBaseEntity.h</key>

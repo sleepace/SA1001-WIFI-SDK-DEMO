@@ -14,17 +14,21 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
+  - CocoaAsyncSocket (7.6.4)
 
 DEPENDENCIES:
   - AFNetworking
+  - CocoaAsyncSocket (~> 7.6.4)
 
 SPEC REPOS:
   trunk:
     - AFNetworking
+    - CocoaAsyncSocket
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
 
-PODFILE CHECKSUM: 776a5a82900fe6fa1163416fe3e22480cda5497d
+PODFILE CHECKSUM: 6f6f7865c74e034728e9952fde533fc69cd4440f
 
 COCOAPODS: 1.9.1

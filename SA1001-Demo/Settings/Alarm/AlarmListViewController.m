@@ -41,17 +41,57 @@
 - (void)loadData
 {
     __weak typeof(self) weakSelf = self;
-//    [SLPSharedMLanManager sal:SharedDataManager.deviceName getAlarmListTimeout:0 completion:^(SLPDataTransferStatus status, id data) {
-//        weakSelf.alramList = data;
-//        if (self.alramList && self.alramList.count > 0) {
-//            self.tableView.hidden = NO;
-//            self.emptyView.hidden = YES;
-//            [weakSelf.tableView reloadData];
-//        }else{
-//            self.tableView.hidden = YES;
-//            self.emptyView.hidden = NO;
-//        }
-//    }];
+    [SLPSharedHTTPManager getAlarmListWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    
+                    NSArray *alarms = dic[@"alarms"];
+                    NSMutableArray *alramList = [NSMutableArray array];
+                    if ([alarms isKindOfClass:[NSArray class]]) {
+                        NSInteger count = alarms.count;
+                        for (int i = 0; i < count; i++) {
+                            NSDictionary *alarmDic = [alarms objectAtIndex:i];
+                            
+                            SA1001AlarmInfo *info = [SA1001AlarmInfo new];
+                            info.alarmID = [alarmDic[@"alarmId"] longLongValue];
+                            info.isOpen = [alarmDic[@"alarmFlag"] boolValue];
+                            info.hour = [alarmDic[@"hour"] integerValue];
+                            info.minute = [alarmDic[@"min"] integerValue];
+                            info.flag = [alarmDic[@"week"] integerValue];
+                            info.snoozeTime = [alarmDic[@"lazyTime"] integerValue];
+                            info.snoozeLength = [alarmDic[@"lazyTimes"] integerValue];
+                            info.volume = [alarmDic[@"volum"] integerValue];
+                            info.brightness = [alarmDic[@"lightStrength"] integerValue];
+                            info.shake = [alarmDic[@"oscillator"] boolValue];
+                            info.musicID = [alarmDic[@"musicId"] integerValue];
+
+                            info.aromaRate = [alarmDic[@"aromatherapyRate"] integerValue];
+                            info.timestamp = [alarmDic[@"timeStamp"] intValue];
+
+                            [alramList addObject:info];
+                        }
+                    }
+                    
+                    weakSelf.alramList = alramList;
+                    if (weakSelf.alramList && weakSelf.alramList.count > 0) {
+                        weakSelf.emptyView.hidden = YES;
+                        weakSelf.tableView.hidden = NO;
+                        [weakSelf.tableView reloadData];
+                    }else{
+                        weakSelf.emptyView.hidden = NO;
+                        weakSelf.tableView.hidden = YES;
+                    }
+                }
+            }
+        }
+
+    }];
 }
 
 - (void)setUI

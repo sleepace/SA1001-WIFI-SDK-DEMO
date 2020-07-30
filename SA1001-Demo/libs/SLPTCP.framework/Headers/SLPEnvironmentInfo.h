@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UInt8 humidity;
 
 // 错误码
-@property (nonatomic,assign) UInt16 ErrorCode;
+@property (nonatomic,assign) UInt16 errorCode;
 
 @end
 

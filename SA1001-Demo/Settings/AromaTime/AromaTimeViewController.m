@@ -55,21 +55,13 @@
 
 - (IBAction)saveAction:(id)sender {
     
-    SA1001TimeAromaInfo *info = [[SA1001TimeAromaInfo alloc] init];
-    info.hour = self.timeDataNew.hour;
-    info.minute = self.timeDataNew.minute;
-    info.duration = self.timeDataNew.lastMin;
+    NSInteger ID = 0;
     if (self.pageType == AromaTimePageType_Add) {
-        info.ID = self.addID;
+        ID = self.addID;
     }else{
-        info.ID = [self.timeDataNew.seqId intValue];
+        ID = [self.timeDataNew.seqId intValue];
     }
-    info.enable = YES;
-    info.flag = 0x7f;
-    info.rate = 2;
-    
-    NSArray *timeList = [NSArray arrayWithObjects:info, nil];
-    
+        
     if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
@@ -77,10 +69,19 @@
     
      [self showLoadingView];
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salEditeTimeAromaList:timeList deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        [weakSelf unshowLoadingView];
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    
+    NSDictionary *par = @{
+        @"aromatherapyId":@(ID),
+        @"aromatherapyFlag" : @"1",
+        @"min":@(self.timeDataNew.minute),
+        @"week":@(0x7f),
+        @"hour":@(self.timeDataNew.hour),
+        @"rate":@"2",
+        @"timeRange":@(self.timeDataNew.lastMin),
+    };
+    [SLPSharedHTTPManager configTimeAromaInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
             if ([weakSelf.delegate respondsToSelector:@selector(editAromaTimeAndShouldReload)]) {
                 [weakSelf.delegate editAromaTimeAndShouldReload];
@@ -184,9 +185,9 @@
     }
     __weak typeof(self) weakSelf = self;
     UInt64 seqId = [self.timeDataNew.seqId intValue];
-    [SLPSharedLTcpManager salDeleteTimeAroma:seqId deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    [SLPSharedHTTPManager deleteTimeAromaWithID:seqId deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
             if ([weakSelf.delegate respondsToSelector:@selector(editAromaTimeAndShouldReload)]) {
                 [weakSelf.delegate editAromaTimeAndShouldReload];

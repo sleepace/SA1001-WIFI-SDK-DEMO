@@ -647,12 +647,34 @@
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
+    
+    NSDictionary *par = @{
+        @"sceneId":@"100",
+        @"sceneFlag" : @"1",
+        @"sceneType":@"0",
+        @"monitorFlag":@"0",
+        @"monitorType":@"0",
+        @"monitorDeviceId":@"0000000000000",
+        @"aidFlag":@"1",
+        @"masterFlag":@"1",
+        @"defaultFlag":@"7",
+        @"volum":@"12",
+        @"brightness":@(aidInfo.brightness),
+        @"colorR":@(aidInfo.r),
+        @"colorG":@(aidInfo.g),
+        @"colorB":@(aidInfo.b),
+        @"colorW":@(aidInfo.w),
+        @"aromatherapyRate":@(aidInfo.aromaRate),
+        @"aromatherapyFlag":@"1",
+        @"aidTimeRange":@(aidInfo.aidStopDuration),
+        @"smartWakeUp":@"0",
+    };
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salSleepAidConfig:aidInfo monitorDevice:@"" monitorDeviceType:SLPDeviceType_None deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    [SLPSharedHTTPManager configAidInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
-//            SharedDataManager.aidInfo = aidInfo;
+            SharedDataManager.aidInfo = aidInfo;
             [Utils showMessage:LocalizedString(@"save_succeed") controller:weakSelf];
         }
     }];

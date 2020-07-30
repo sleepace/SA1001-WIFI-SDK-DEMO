@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)stopRealTimeDataWithDeviceID:(NSString *)deviceID deviceType:(SLPDeviceTypes)deviceType timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
-- (void)startCollectionWithDeviceID:(NSString *)deviceID deviceType:(SLPDeviceTypes)deviceType userID:(NSString *)userID timeStamp:(UInt32)timeStamp timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
+//接口废弃
+//- (void)startCollectionWithDeviceID:(NSString *)deviceID deviceType:(SLPDeviceTypes)deviceType userID:(NSString *)userID timeStamp:(UInt32)timeStamp timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 - (void)stopCollectionWithDeviceID:(NSString *)deviceID deviceType:(SLPDeviceTypes)deviceType userID:(NSString *)userID timeStamp:(UInt32)timeStamp timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 

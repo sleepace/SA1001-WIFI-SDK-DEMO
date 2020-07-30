@@ -38,18 +38,49 @@
 - (void)loadData
 {
     __weak typeof(self) weakSelf = self;
-//    [SLPSharedMLanManager sal:SharedDataManager.deviceName getTimeAromaTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
-//        NSArray *timeList = data;
-//        self.aromaTimeList = timeList;
-//        if (self.aromaTimeList && self.aromaTimeList.count > 0) {
-//            self.emptyView.hidden = YES;
-//            self.tableView.hidden = NO;
-//            [weakSelf.tableView reloadData];
-//        }else{
-//            self.emptyView.hidden = NO;
-//            self.tableView.hidden = YES;
-//        }
-//    }];
+    [SLPSharedHTTPManager getTimeAromaListWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    
+                    NSArray *aromatherapyList = dic[@"aromatherapyList"];
+                    NSMutableArray *timeList = [NSMutableArray array];
+                    if ([aromatherapyList isKindOfClass:[NSArray class]]) {
+                        NSInteger count = aromatherapyList.count;
+                        for (int i = 0; i < count; i++) {
+                            NSDictionary *aromaDic = [aromatherapyList objectAtIndex:i];
+                            
+                            SA1001TimeAromaInfo *info = [SA1001TimeAromaInfo new];
+                            info.ID = [aromaDic[@"aromatherapyId"] longLongValue];
+                            info.flag = [aromaDic[@"week"] integerValue];
+                            info.enable = [aromaDic[@"aromatherapyFlag"] boolValue];
+                            info.duration = [aromaDic[@"timeRange"] integerValue];
+                            info.rate = [aromaDic[@"rate"] integerValue];
+                            info.hour = [aromaDic[@"hour"] integerValue];
+                            info.minute = [aromaDic[@"min"] integerValue];
+
+                            [timeList addObject:info];
+                        }
+                    }
+                    
+                    weakSelf.aromaTimeList = timeList;
+                    if (weakSelf.aromaTimeList && weakSelf.aromaTimeList.count > 0) {
+                        weakSelf.emptyView.hidden = YES;
+                        weakSelf.tableView.hidden = NO;
+                        [weakSelf.tableView reloadData];
+                    }else{
+                        weakSelf.emptyView.hidden = NO;
+                        weakSelf.tableView.hidden = YES;
+                    }
+                }
+            }
+        }
+    }];
 }
 
 - (void)setUI

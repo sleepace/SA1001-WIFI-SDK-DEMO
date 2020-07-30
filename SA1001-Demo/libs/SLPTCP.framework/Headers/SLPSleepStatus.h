@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SLPSleepStatus : NSObject
 // 错误码
-@property (nonatomic,assign) UInt16 ErrorCode;
+@property (nonatomic,assign) UInt16 errorCode;
 
 @property (nonatomic , copy) NSString *deviceID;
 @property (nonatomic , assign) UInt16 deviceType;
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  0x03: 中睡
  0x04: 深睡
  */
-@property (nonatomic , assign) UInt8 sleepStatus;
+//@property (nonatomic , assign) UInt8 sleepStatus;
 /*
  0x00: 躺着
  0x01: 坐起

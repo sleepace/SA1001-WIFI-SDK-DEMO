@@ -89,9 +89,9 @@
 
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");
-    self.ipTextField.text = @"http://172.14.0.111:8082";
+    self.ipTextField.text = @"http://172.14.0.65:8082";
     
-    self.deviceIDTextField.text = @"EW22W20C00045";
+    self.deviceIDTextField.text = @"o0zguh6yxmi5o";
     if (SharedDataManager.deviceID.length > 0) {
         self.deviceIDTextField.text = SharedDataManager.deviceID;
     }
@@ -99,11 +99,11 @@
     if (SharedDataManager.token.length > 0) {
         self.tokenTextField.text = SharedDataManager.token;
     } else {
-        self.tokenTextField.text = @"kylhm2tu62sw";
+        self.tokenTextField.text = @"wangyong";
 //        self.tokenTextField.text = @"r8xfa7hdjcm6";
     }
     
-    self.channelTextField.text = @"13700";
+    self.channelTextField.text = @"13800";
     if (SharedDataManager.channelID.length > 0) {
         self.channelTextField.text = SharedDataManager.channelID;
     }
@@ -196,12 +196,12 @@
 
             NSDictionary *tcpDic = responseObject[@"data"][@"tcpServer"];
             
-            NSString *str = SharedDataManager.deviceID;
+            NSString *str = SharedDataManager.deviceName;
             NSLog(@"deviceID ---- %@",str);
             [[NSUserDefaults standardUserDefaults] setValue:self.channelTextField.text forKey:@"channelID"];
             SharedDataManager.channelID = self.channelTextField.text;
 
-            [SLPSharedLTcpManager loginHost:tcpDic[@"ip"] port:[tcpDic[@"port"] integerValue] deviceID:SharedDataManager.deviceName token:self.tokenTextField.text completion:^(BOOL succeed) {
+            [SLPSharedLTcpManager loginHost:tcpDic[@"ip"] port:[tcpDic[@"port"] integerValue] deviceID:SharedDataManager.deviceName token:SLPSharedHTTPManager.sid completion:^(BOOL succeed) {
                 if (succeed) {
                     SharedDataManager.connected = YES;
                     [Utils showMessage:LocalizedString(@"connection_succeeded") controller:self];

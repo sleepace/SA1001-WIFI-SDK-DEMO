@@ -53,7 +53,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self showConnected:SharedDataManager.connected];
+//    [self showConnected:SharedDataManager.connected];
 }
 
 - (void)addNotificationObservre {
@@ -64,12 +64,12 @@
 
 - (void)deviceConnected:(NSNotification *)notification {
     SharedDataManager.connected = YES;
-    [self showConnected:YES];
+//    [self showConnected:YES];
 }
 
 - (void)deviceDisconnected:(NSNotification *)notfication {
     SharedDataManager.connected = NO;
-    [self showConnected:NO];
+//    [self showConnected:NO];
 }
 
 - (void)setUI

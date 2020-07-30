@@ -9,7 +9,7 @@
 #import "SettingsViewController.h"
 #import "AlarmListViewController.h"
 #import "AromaTimeViewController.h"
-#import "AromaTimeViewController.h"
+#import "AromaTimeListViewController.h"
 #import "CenterSettingViewController.h"
 #import "TitleSubTitleArrowCell.h"
 #import <SLPTCP/SLPTCP.h>
@@ -45,7 +45,7 @@ enum {
 {
     [super viewWillAppear:animated];
     
-    [self showConnected:SharedDataManager.connected];
+//    [self showConnected:SharedDataManager.connected];
 }
 
 - (void)addNotificationObservre {
@@ -56,12 +56,12 @@ enum {
 
 - (void)deviceConnected:(NSNotification *)notification {
     SharedDataManager.connected = YES;
-    [self showConnected:YES];
+//    [self showConnected:YES];
 }
 
 - (void)deviceDisconnected:(NSNotification *)notfication {
     SharedDataManager.connected = NO;
-    [self showConnected:NO];
+//    [self showConnected:NO];
 }
 
 - (void)showConnected:(BOOL)connected {
@@ -69,6 +69,28 @@ enum {
     [self.view setAlpha:alpha];
     
     [self.view setUserInteractionEnabled:connected];
+}
+
+- (void)getCenterKey
+{
+    [SLPSharedHTTPManager getCenterKeyWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    
+                    NSInteger selectItemsNum = [dic[@"music"] integerValue] + ([dic[@"light"] integerValue] << 1) + ([dic[@"aromatherapy"] integerValue] << 2);
+
+                    SharedDataManager.selectItemsNum = selectItemsNum;
+                }
+            }
+        }
+
+    }];
 }
 
 - (void)setUI
@@ -118,7 +140,7 @@ enum {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+//    __weak typeof(self) weakSelf = self;
     
 //    [SLPSharedMLanManager sal:SharedDataManager.deviceName deviceInitTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
 //        if (status != SLPDataTransferStatus_Succeed) {
@@ -134,7 +156,7 @@ enum {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == Row_Alarm) {
-         [self goAddAlarm];
+         [self goAlarmPage];
     }else if (indexPath.row == Row_AromaTime){
         [self goAromaTimePage];
     }else if (indexPath.row == Row_CenterSetting){
@@ -142,18 +164,15 @@ enum {
     }
 }
 
-//- (void)goAlarmPage
-//{
-//    AlarmListViewController *vc = [AlarmListViewController new];
-//    [self.navigationController pushViewController:vc animated:YES];
-//}
+- (void)goAlarmPage
+{
+    AlarmListViewController *vc = [AlarmListViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 - (void)goAromaTimePage
 {
-    NSInteger ID = 100;
-    AromaTimeViewController *vc = [AromaTimeViewController new];
-    vc.addID = ID;
-    vc.pageType = AromaTimePageType_Add;
+    AromaTimeListViewController *vc = [AromaTimeListViewController new];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

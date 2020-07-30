@@ -54,15 +54,20 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salSetCenterKey:lightEnable musicEnable:musicEnable aromaEnable:aromaEnable deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    NSDictionary *par = @{
+        @"light":(lightEnable ? @"1" : @"0"),
+        @"music" : (musicEnable ? @"1" : @"0"),
+        @"aromatherapy":(aromaEnable ? @"1" : @"0")
+    };
+    [SLPSharedHTTPManager configCenterKeyWithParameters:par deviceInfo:@"o0zguh6yxmi5o" deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"configCenterKey----------------%@", responseObject);
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
-//            SharedDataManager.selectItemsNum = self.selectItemsNumNew;
+            SharedDataManager.selectItemsNum = self.selectItemsNumNew;
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }
     }];
-    
 }
 
 - (NSArray *)getSelectItems:(NSInteger)selectItemsNum

@@ -89,7 +89,7 @@
 
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");
-    self.ipTextField.text = @"http://172.14.0.65:8082";
+    self.ipTextField.text = @"http://120.24.169.204:8091";
     
     self.deviceIDTextField.text = @"o0zguh6yxmi5o";
     if (SharedDataManager.deviceID.length > 0) {
@@ -103,7 +103,7 @@
 //        self.tokenTextField.text = @"r8xfa7hdjcm6";
     }
     
-    self.channelTextField.text = @"13800";
+    self.channelTextField.text = @"13700";
     if (SharedDataManager.channelID.length > 0) {
         self.channelTextField.text = SharedDataManager.channelID;
     }

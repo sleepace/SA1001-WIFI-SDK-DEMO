@@ -38,6 +38,7 @@
         _token = @"";
         _channelID = @"";
         _plat = @"";
+        _ip = @"";
         
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"deviceName"]) {
             _deviceName = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceName"];
@@ -50,6 +51,9 @@
         }
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"channelID"]) {
             _channelID = [[NSUserDefaults standardUserDefaults] valueForKey:@"channelID"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"ip"]) {
+            _ip = [[NSUserDefaults standardUserDefaults] valueForKey:@"ip"];
         }
     }
     

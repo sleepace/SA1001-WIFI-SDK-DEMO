@@ -89,8 +89,10 @@
 
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");
-    self.ipTextField.text = @"http://120.24.169.204:8091";
-    
+//    self.ipTextField.text = @"http://120.24.169.204:8091";
+    if (SharedDataManager.ip.length > 0) {
+        self.ipTextField.text = SharedDataManager.ip;
+    }
 //    self.deviceIDTextField.text = @"o0zguh6yxmi5o";
     if (SharedDataManager.deviceID.length > 0) {
         self.deviceIDTextField.text = SharedDataManager.deviceID;
@@ -189,6 +191,8 @@
         @"channelID" : self.channelTextField.text,
     };
     [SLPSharedHTTPManager initHttpServiceInfo:par];
+    SharedDataManager.ip = self.ipTextField.text;
+    [[NSUserDefaults standardUserDefaults] setValue:self.ipTextField.text forKey:@"ip"];
     [SLPSharedHTTPManager authorize:self.tokenTextField.text timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (result) {
             SharedDataManager.token = weakSelf.tokenTextField.text;

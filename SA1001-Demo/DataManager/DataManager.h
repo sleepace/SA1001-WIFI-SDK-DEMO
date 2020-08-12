@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSString *version;
 @property (nonatomic, assign) BOOL inRealtime;
 @property (nonatomic, assign) BOOL connected;
+@property (nonatomic, strong) NSString *ip;
 @property (nonatomic, strong) NSString *userID;
 @property (nonatomic, strong) NSString *token;
 @property (nonatomic, strong) NSString *plat;

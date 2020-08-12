@@ -84,8 +84,8 @@
     [Utils configSectionTitle:self.firmwareInfoSectionLabel];
     
     self.ipTextField.placeholder = LocalizedString(@"server_ip");
-    self.tokenTextField.placeholder = LocalizedString(@"token");
-    self.channelTextField.placeholder = LocalizedString(@"ChannelID");
+    self.tokenTextField.placeholder = LocalizedString(@"enter_token");
+    self.channelTextField.placeholder = LocalizedString(@"enter_id");
 
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");

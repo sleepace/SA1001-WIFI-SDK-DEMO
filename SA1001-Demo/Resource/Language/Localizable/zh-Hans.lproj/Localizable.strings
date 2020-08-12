@@ -53,7 +53,7 @@
 "fri"="周五";
 "fireware_update"="固件升级";
 "obtain_firmware"="获取固件版本";
-"device_id_cipher"="设备ID（密文）";
+"device_id_cipher"="输入设备ID（密文）";
 "device_id_clear"="设备ID（明文）";
 "setting"="设置";
 "firmware_info"="固件信息";

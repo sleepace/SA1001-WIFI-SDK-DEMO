@@ -87,7 +87,7 @@
     self.tokenTextField.placeholder = LocalizedString(@"enter_token");
     self.channelTextField.placeholder = LocalizedString(@"enter_id");
 
-    self.deviceIDTextField.placeholder = LocalizedString(@"device_id");
+    self.deviceIDTextField.placeholder = LocalizedString(@"device_id_cipher");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");
 //    self.ipTextField.text = @"http://120.24.169.204:8091";
     if (SharedDataManager.ip.length > 0) {
@@ -114,7 +114,14 @@
     self.tokenTextField.delegate = self;
     self.deviceIDTextField.delegate = self;
     self.firmwareVersionTextField.delegate = self;
+    self.channelTextField.delegate = self;
 
+    self.ipTextField.returnKeyType = UIReturnKeyDone;
+    self.tokenTextField.returnKeyType = UIReturnKeyDone;
+    self.deviceIDTextField.returnKeyType = UIReturnKeyDone;
+    self.firmwareVersionTextField.returnKeyType = UIReturnKeyDone;
+    self.channelTextField.returnKeyType = UIReturnKeyDone;
+    
     [Utils setButton:self.getDeviceNameBtn title:LocalizedString(@"device_id_clear")];
     [Utils setButton:self.getDeviceIDBtn title:LocalizedString(@"device_id_cipher")];
     [Utils setButton:self.getBatteryBtn title:LocalizedString(@"obtain_electricity")];
@@ -367,4 +374,12 @@
     
     return YES;
 }
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    
+    return YES;;
+}
+
 @end

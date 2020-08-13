@@ -179,3 +179,6 @@
 "device_id"="设备ID";
 "target_version"="输入目标固件版本";
 "connect_server"="连接服务器";
+"login"="登录";
+"connection_succeeded"="连接成功";
+"Connection_failed"="连接失败";

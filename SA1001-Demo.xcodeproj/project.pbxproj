@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		386DE995D21292C677F3FA3C /* libPods-SA1001-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9419E120369CDAB101DD5939 /* libPods-SA1001-Demo.a */; };
+		4CC8236D24E50DE300DC0B41 /* SLPLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC8236B24E50DE300DC0B41 /* SLPLabelCell.m */; };
+		4CC8236E24E50DE300DC0B41 /* SLPLabelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CC8236C24E50DE300DC0B41 /* SLPLabelCell.xib */; };
 		4CE6894324BE9DFC00B592FA /* SLPTCP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE6894224BE9DFC00B592FA /* SLPTCP.framework */; };
 		8F29C93422F801AC00075EC6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F29C93322F801AC00075EC6 /* AppDelegate.m */; };
 		8F29C93C22F801AD00075EC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F29C93B22F801AD00075EC6 /* Assets.xcassets */; };
@@ -134,6 +136,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4CC8236A24E50DE300DC0B41 /* SLPLabelCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLPLabelCell.h; sourceTree = "<group>"; };
+		4CC8236B24E50DE300DC0B41 /* SLPLabelCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPLabelCell.m; sourceTree = "<group>"; };
+		4CC8236C24E50DE300DC0B41 /* SLPLabelCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SLPLabelCell.xib; sourceTree = "<group>"; };
 		4CE6894224BE9DFC00B592FA /* SLPTCP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SLPTCP.framework; sourceTree = "<group>"; };
 		50F5751A79545FB33A45C269 /* Pods-SA1001-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SA1001-Demo.debug.xcconfig"; path = "Target Support Files/Pods-SA1001-Demo/Pods-SA1001-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		567DAF156B28DB8CE545C5AF /* Pods-SA1001-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SA1001-Demo.release.xcconfig"; path = "Target Support Files/Pods-SA1001-Demo/Pods-SA1001-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -758,6 +763,9 @@
 				8FB5092922FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.h */,
 				8FB5092322FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.m */,
 				8FB5091E22FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.xib */,
+				4CC8236A24E50DE300DC0B41 /* SLPLabelCell.h */,
+				4CC8236B24E50DE300DC0B41 /* SLPLabelCell.m */,
+				4CC8236C24E50DE300DC0B41 /* SLPLabelCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -933,6 +941,7 @@
 				8FB5096422FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.xib in Resources */,
 				8FB5095422FAB71D00DC6061 /* AromaTimeViewController.xib in Resources */,
 				8FB508ED22FAB5F000DC6061 /* common_nav_btn_back_white_nor@3x.png in Resources */,
+				4CC8236E24E50DE300DC0B41 /* SLPLabelCell.xib in Resources */,
 				8FB508D922FAB5F000DC6061 /* HourMinutePicker.xib in Resources */,
 				8FB5097322FAB71D00DC6061 /* DeviceViewController.xib in Resources */,
 				8FB5096622FAB71D00DC6061 /* TitleSubTitleArrowCell.xib in Resources */,
@@ -1042,6 +1051,7 @@
 				8F29C93422F801AC00075EC6 /* AppDelegate.m in Sources */,
 				8FB5095C22FAB71D00DC6061 /* MusicListViewController.m in Sources */,
 				8FB508E422FAB5F000DC6061 /* Theme.m in Sources */,
+				4CC8236D24E50DE300DC0B41 /* SLPLabelCell.m in Sources */,
 				8FB5096222FAB71D00DC6061 /* SLPViewInfo.m in Sources */,
 				8FB5096722FAB71D00DC6061 /* TitleValueSwitchCellTableViewCell.m in Sources */,
 				8FB508CC22FAB5F000DC6061 /* DatePickerPopUpView.m in Sources */,

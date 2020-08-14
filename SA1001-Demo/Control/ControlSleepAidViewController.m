@@ -193,7 +193,6 @@
 {
     [super viewWillAppear:animated];
     
-    self.colorGTextfFiled.text = @"";
     self.brightnessTextFiled.text = @"";
     self.volTextField.text = @"";
     
@@ -683,7 +682,7 @@
 - (void)showTimeSelector
 {
     NSMutableArray *values = [NSMutableArray array];
-    for (int i = 1; i <= 45; i++) {
+    for (int i = 1; i <= 60; i++) {
         [values addObject:@(i)];
     }
     SLPMinuteSelectView *minuteSelectView = [SLPMinuteSelectView minuteSelectViewWithValues:values];

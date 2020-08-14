@@ -26,9 +26,9 @@
         _assistMusicID = 31038;
         
         _aidInfo = [[SA1001AidInfo alloc] init];
-        _aidInfo.aidStopDuration = 1;
+        _aidInfo.aidStopDuration = 45;
         _aidInfo.r = 255;
-        _aidInfo.b = 0;
+        _aidInfo.b = 120;
         _aidInfo.w = 0;
         _aidInfo.brightness = 0;
         _aidInfo.aromaRate = 2;
@@ -65,9 +65,9 @@
     _selectItemsNum = 7;
     _assistMusicID = 31038;
     
-    _aidInfo.aidStopDuration = 1;
+    _aidInfo.aidStopDuration = 45;
     _aidInfo.r = 255;
-    _aidInfo.b = 0;
+    _aidInfo.b = 120;
     _aidInfo.w = 0;
     _aidInfo.brightness = 0;
     _aidInfo.aromaRate = 2;

@@ -73,6 +73,8 @@
 
                             info.aromaRate = [alarmDic[@"aromatherapyRate"] integerValue];
                             info.timestamp = [alarmDic[@"timeStamp"] intValue];
+                            info.smartFlag = [alarmDic[@"smartFlag"] intValue];
+                            info.smartOffset = [alarmDic[@"smartOffset"] intValue];
 
                             [alramList addObject:info];
                         }

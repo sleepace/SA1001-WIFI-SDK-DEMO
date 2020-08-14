@@ -29,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UInt16 musicID;//音乐ID
 @property (nonatomic, assign) UInt8 aromaRate;//香薰速率 0：关 1-3：三挡速率
 @property (nonatomic, assign) UInt32 timestamp;//时间戳 设置/修改闹钟时的标准时间戳（用于单次闹钟）
-
+@property (nonatomic, assign) UInt8 smartFlag;//智能闹钟
+@property (nonatomic, assign) UInt8 smartOffset;//智能开启时有效
 
 @end
 

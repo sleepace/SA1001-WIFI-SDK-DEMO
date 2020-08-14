@@ -44,7 +44,7 @@
     self.selectedIndex = -1;
     self.tabItemList =
     @[
-      [TabBarItem tabBarItemWithTitle:@"login" viewControllerClassString:@"DeviceViewController"],
+      [TabBarItem tabBarItemWithTitle:@"login_in" viewControllerClassString:@"DeviceViewController"],
       [TabBarItem tabBarItemWithTitle:@"control" viewControllerClassString:@"ControlViewController"],
       [TabBarItem tabBarItemWithTitle:@"setting" viewControllerClassString:@"SettingsViewController"],
       ];

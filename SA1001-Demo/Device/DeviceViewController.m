@@ -94,8 +94,8 @@
         self.ipTextField.text = SharedDataManager.ip;
     }
     self.deviceIDTextField.text = @"o0zguh6yxmi5o";
-    if (SharedDataManager.deviceID.length > 0) {
-        self.deviceIDTextField.text = SharedDataManager.deviceID;
+    if (SharedDataManager.deviceName.length > 0) {
+        self.deviceIDTextField.text = SharedDataManager.deviceName;
     }
     
     if (SharedDataManager.token.length > 0) {
@@ -171,19 +171,19 @@
 
 -(IBAction)connectDevice:(id)sender {
     if (self.deviceIDTextField.text.length == 0) {
-        [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
+        [Utils showMessage:LocalizedString(@"complete") controller:self];
         return;
     }
     if (self.ipTextField.text.length == 0) {
-        [Utils showMessage:LocalizedString(@"server_http") controller:self];
+        [Utils showMessage:LocalizedString(@"complete") controller:self];
         return;
     }
     if (self.tokenTextField.text.length == 0) {
-        [Utils showMessage:LocalizedString(@"enter_token") controller:self];
+        [Utils showMessage:LocalizedString(@"complete") controller:self];
         return;
     }
     if (self.channelTextField.text.length == 0) {
-        [Utils showMessage:LocalizedString(@"enter_id") controller:self];
+        [Utils showMessage:LocalizedString(@"complete") controller:self];
         return;
     }
     
@@ -217,12 +217,12 @@
                     SharedDataManager.connected = YES;
                     [Utils showMessage:LocalizedString(@"connection_succeeded") controller:self];
                 } else {
-                    [Utils showMessage:LocalizedString(@"Connection_failed") controller:self];
+                    [Utils showMessage:LocalizedString(@"confirm_correctly") controller:self];
                 }
                 [weakSelf unshowLoadingView];
             }];
         } else {
-            [Utils showMessage:LocalizedString(@"Connection_failed") controller:weakSelf];
+            [Utils showMessage:LocalizedString(@"confirm_correctly") controller:weakSelf];
         }
     }];
 }

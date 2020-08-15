@@ -84,6 +84,10 @@
         [SLPSharedLTcpManager salTurnOnMusic:musicID volume:12 playMode:2 deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+            }else{
+                if (weakSelf.musicBlock) {
+                    weakSelf.musicBlock(weakSelf.musicID);
+                }
             }
         }];
     }

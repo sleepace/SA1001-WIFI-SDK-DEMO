@@ -125,6 +125,11 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     [self createFooterList];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void)setUI
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(15, 0, self.view.frame.size.width - 30, 0.001)];
@@ -576,7 +581,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         @"musicId":@(self.alarmDataNew.musicID),
         @"timeStamp":@(self.alarmDataNew.timestamp),
     };
-    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:@"o0zguh6yxmi5o" deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         NSLog(@"configAlarm----------------%@", responseObject);
         [weakSelf unshowLoadingView];
         if (!result) {

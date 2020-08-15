@@ -58,25 +58,27 @@
                         for (int i = 0; i < count; i++) {
                             NSDictionary *alarmDic = [alarms objectAtIndex:i];
                             
-                            SA1001AlarmInfo *info = [SA1001AlarmInfo new];
-                            info.alarmID = [alarmDic[@"alarmId"] longLongValue];
-                            info.isOpen = [alarmDic[@"alarmFlag"] boolValue];
-                            info.hour = [alarmDic[@"hour"] integerValue];
-                            info.minute = [alarmDic[@"min"] integerValue];
-                            info.flag = [alarmDic[@"week"] integerValue];
-                            info.snoozeTime = [alarmDic[@"lazyTime"] integerValue];
-                            info.snoozeLength = [alarmDic[@"lazyTimes"] integerValue];
-                            info.volume = [alarmDic[@"volum"] integerValue];
-                            info.brightness = [alarmDic[@"lightStrength"] integerValue];
-                            info.shake = [alarmDic[@"oscillator"] boolValue];
-                            info.musicID = [alarmDic[@"musicId"] integerValue];
+                            if ([alarmDic isKindOfClass:[NSDictionary class]]) {
+                                SA1001AlarmInfo *info = [SA1001AlarmInfo new];
+                                info.alarmID = [alarmDic[@"alarmId"] longLongValue];
+                                info.isOpen = [alarmDic[@"alarmFlag"] boolValue];
+                                info.hour = [alarmDic[@"hour"] integerValue];
+                                info.minute = [alarmDic[@"min"] integerValue];
+                                info.flag = [alarmDic[@"week"] integerValue];
+                                info.snoozeTime = [alarmDic[@"lazyTime"] integerValue];
+                                info.snoozeLength = [alarmDic[@"lazyTimes"] integerValue];
+                                info.volume = [alarmDic[@"volum"] integerValue];
+                                info.brightness = [alarmDic[@"lightStrength"] integerValue];
+                                info.shake = [alarmDic[@"oscillator"] boolValue];
+                                info.musicID = [alarmDic[@"musicId"] integerValue];
 
-                            info.aromaRate = [alarmDic[@"aromatherapyRate"] integerValue];
-                            info.timestamp = [alarmDic[@"timeStamp"] intValue];
-                            info.smartFlag = [alarmDic[@"smartFlag"] intValue];
-                            info.smartOffset = [alarmDic[@"smartOffset"] intValue];
+                                info.aromaRate = [alarmDic[@"aromatherapyRate"] integerValue];
+                                info.timestamp = [alarmDic[@"timeStamp"] intValue];
+                                info.smartFlag = [alarmDic[@"smartFlag"] intValue];
+                                info.smartOffset = [alarmDic[@"smartOffset"] intValue];
 
-                            [alramList addObject:info];
+                                [alramList addObject:info];
+                            }
                         }
                     }
                     

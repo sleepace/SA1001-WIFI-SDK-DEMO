@@ -40,11 +40,10 @@ TCP状态变化通知
  socket连接登陆
  @param host ip地址
  @param port 端口号
- @param deviceID 设备ID
  @param token  sid
  @param completion 成功失败回调
  */
-- (BOOL)loginHost:(NSString *)host port:(NSInteger)port deviceID:(NSString *)deviceID token:(NSString *)token completion:(void(^)(BOOL succeed))completion;
+- (BOOL)loginHost:(NSString *)host port:(NSInteger)port token:(NSString *)token completion:(void(^)(BOOL succeed))completion;
 
 /**
  socket 主动断开连接操作

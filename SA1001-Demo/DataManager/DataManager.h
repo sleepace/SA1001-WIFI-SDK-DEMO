@@ -31,6 +31,10 @@
 
 @property (nonatomic, assign) NSInteger volumn;
 
+@property (nonatomic, assign) double currentVersion;
+@property (nonatomic, assign) double upgradeVersion;
+@property (nonatomic, strong) NSString *upgradeUrl;
+
 @property (nonatomic, strong) SA1001AidInfo *aidInfo;
 
 + (DataManager *)sharedDataManager;

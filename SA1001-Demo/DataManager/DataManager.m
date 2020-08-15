@@ -32,7 +32,7 @@
         _aidInfo.w = 0;
         _aidInfo.brightness = 0;
         _aidInfo.aromaRate = 2;
-        _volumn = 0;
+        _volumn = 10;
         
         _deviceName = @"";
         _token = @"";
@@ -71,7 +71,7 @@
     _aidInfo.w = 0;
     _aidInfo.brightness = 0;
     _aidInfo.aromaRate = 2;
-    _volumn = 0;
+    _volumn = 10;
 }
 
 - (void)toInit {

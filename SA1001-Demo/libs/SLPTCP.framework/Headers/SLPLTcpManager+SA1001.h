@@ -412,6 +412,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)salDisableAlarm:(UInt64)alarmID deviceInfo:(NSString *)deviceName timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
+/**
+ 设备开始升级
+ @param deviceName
+ 设备名称
+ 
+ @param currentHardwareVersion 设备当前版本号
+ @param upgradeHardwareVersion 升级版本号
+ @param upgradeType 升级类型
+ @param url 升级地址
+ @param handle 回调
+ */
+- (void)salCurrentHardwareVersion:(double)currentHardwareVersion upgradeHardwareVersion:(double)upgradeHardwareVersion upgradeType:(UInt8)upgradeType url:(NSString *)url deviceInfo:(NSString *)deviceName timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
+
 @end
 
 NS_ASSUME_NONNULL_END

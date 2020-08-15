@@ -45,6 +45,7 @@ enum {
 {
     [super viewWillAppear:animated];
     
+    [self getCenterKey];
 //    [self showConnected:SharedDataManager.connected];
 }
 

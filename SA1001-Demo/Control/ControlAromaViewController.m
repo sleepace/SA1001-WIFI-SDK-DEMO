@@ -76,8 +76,30 @@
     [super viewWillAppear:animated];
     
     [self reset];
+    [self getWorkMode];
 }
 
+- (void)getWorkMode
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed) {
+            SA1001WorkMode *mode = (SA1001WorkMode *)data;
+            [weakSelf updateAromaBtn:(mode.aromaRate != 0)];
+        }
+    }];
+}
+
+- (void)updateAromaBtn:(BOOL)aromOn
+{
+    if (!aromOn) {
+        self.openAroma.alpha = 0.3;
+        self.openAroma.userInteractionEnabled = NO;
+    } else {
+        self.openAroma.alpha = 1;
+        self.openAroma.userInteractionEnabled = YES;
+    }
+}
 - (void)setUI
 {
     [self.fastBtn setTitle:LocalizedString(@"fast") forState:UIControlStateNormal];
@@ -157,6 +179,8 @@
     [SLPSharedLTcpManager salSetAroma:rate deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        } else {
+            [weakSelf updateAromaBtn:(rate != 0)];
         }
     }];
 }

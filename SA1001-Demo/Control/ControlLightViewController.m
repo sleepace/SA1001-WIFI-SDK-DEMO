@@ -84,6 +84,8 @@
     self.colorBTextFiled.text = @"";
     self.colorWTextFiled.text = @"";
     self.brightnessTextFiled.text = @"";
+    
+    [self getWorkMode];
 }
 
 - (void)setUI
@@ -107,6 +109,28 @@
     self.sendBrightnessBtn.layer.cornerRadius = 5;
     self.openLightBtn.layer.masksToBounds = YES;
     self.openLightBtn.layer.cornerRadius = 5;
+}
+
+- (void)getWorkMode
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed) {
+            SA1001WorkMode *mode = (SA1001WorkMode *)data;
+            [weakSelf updateLigntBtn:mode.isLightOn];
+        }
+    }];
+}
+
+- (void)updateLigntBtn:(BOOL)lightOn
+{
+    if (!lightOn) {
+        self.openLightBtn.alpha = 0.3;
+        self.openLightBtn.userInteractionEnabled = NO;
+    } else {
+        self.openLightBtn.alpha = 1;
+        self.openLightBtn.userInteractionEnabled = YES;
+    }
 }
 
 - (IBAction)sendColorAction:(UIButton *)sender {
@@ -158,6 +182,8 @@
         [SLPSharedLTcpManager salTurnOnColorLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+            } else {
+                [weakSelf updateLigntBtn:YES];
             }
         }];
     }else{
@@ -200,6 +226,8 @@
     [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        } else {
+            [weakSelf updateLigntBtn:NO];
         }
     }];
 }

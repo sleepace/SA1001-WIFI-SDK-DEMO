@@ -199,6 +199,9 @@
     self.currentAromaBtn.selected = NO;
 //    [self setUI];
     
+    [self getWorkMode];
+    [self getSleepAidInfo];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledEditChanged:)name:UITextFieldTextDidChangeNotification object:nil];
 }
 
@@ -358,6 +361,60 @@
     self.saveBtn.layer.cornerRadius = 5;
 }
 
+- (void)getWorkMode
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed) {
+            SA1001WorkMode *mode = (SA1001WorkMode *)data;
+            [weakSelf updateLigntBtn:mode.isLightOn];
+        }
+    }];
+}
+
+- (void)updateLigntBtn:(BOOL)lightOn
+{
+    if (!lightOn) {
+        self.openLightBtn.alpha = 0.3;
+        self.openLightBtn.userInteractionEnabled = NO;
+    } else {
+        self.openLightBtn.alpha = 1;
+        self.openLightBtn.userInteractionEnabled = YES;
+    }
+}
+- (void)getSleepAidInfo
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedHTTPManager getAidInfoWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"getAIdInfo----------------%@", responseObject);
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    NSLog(@"getDic----------------%@", dic);
+                    
+                    NSArray *array = dic[@"scenes"];
+                    if ([array isKindOfClass:[NSArray class]]) {
+                        NSDictionary *aidDic = [dic[@"scenes"] firstObject];
+                        NSLog(@"getAIdInfo----------------%@", aidDic);
+
+                        SharedDataManager.aidInfo.brightness = [aidDic[@"brightness"] intValue];
+                        SharedDataManager.aidInfo.g = [aidDic[@"colorG"] intValue];
+                        SharedDataManager.aidInfo.aromaRate = [aidDic[@"aromatherapyRate"] intValue];
+                        SharedDataManager.aidInfo.aidStopDuration = [aidDic[@"aidTimeRange"] intValue];
+                        
+                        [weakSelf setUI];
+                    }
+                }
+            }
+        }
+    }];
+}
+
 - (NSString *)getMusicNameWithMusicID:(NSInteger)musicID
 {
     NSString *musicName = @"";
@@ -494,6 +551,7 @@
     __weak typeof(self) weakSelf = self;
     [SLPSharedLTcpManager salTurnOnSleepAidLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
+            [weakSelf updateLigntBtn:YES];
         }else{
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }
@@ -524,6 +582,8 @@
     [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        } else {
+            [weakSelf updateLigntBtn:NO];
         }
     }];
 }
@@ -640,7 +700,7 @@
     aidInfo.brightness = brightness;
     aidInfo.aromaRate = SharedDataManager.aidInfo.aromaRate;
     aidInfo.aidStopDuration = SharedDataManager.aidInfo.aidStopDuration;
-    aidInfo.volume = 12;
+    aidInfo.volume = SharedDataManager.volumn;
     
     if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
@@ -657,14 +717,14 @@
         @"aidFlag":@"1",
         @"masterFlag":@"1",
         @"defaultFlag":@"7",
-        @"volum":@"12",
+        @"volum":@(aidInfo.volume),
         @"brightness":@(aidInfo.brightness),
         @"colorR":@(aidInfo.r),
         @"colorG":@(aidInfo.g),
         @"colorB":@(aidInfo.b),
         @"colorW":@(aidInfo.w),
         @"aromatherapyRate":@(aidInfo.aromaRate),
-        @"aromatherapyFlag":@"1",
+        @"smartFlag":@"0",
         @"aidTimeRange":@(aidInfo.aidStopDuration),
         @"smartWakeUp":@"0",
     };

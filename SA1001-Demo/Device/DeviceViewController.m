@@ -18,9 +18,6 @@
     NSInteger rate;
 }
 @property (nonatomic, weak) IBOutlet UIView *contentView;
-@property (nonatomic, weak) IBOutlet UIView *userIDShell;
-@property (nonatomic, weak) IBOutlet UILabel *userIDTitleLabel;
-@property (nonatomic, weak) IBOutlet UITextField *userIDLabel;
 //deviceInfo
 @property (nonatomic, weak) IBOutlet UITextField *ipTextField;
 @property (nonatomic, weak) IBOutlet UITextField *tokenTextField;
@@ -29,23 +26,11 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *connectBtn;
 @property (nonatomic, weak) IBOutlet UIView *deviceInfoShell;
-@property (nonatomic, weak) IBOutlet UILabel *deviceInfoSectionLabel;
-@property (nonatomic, weak) IBOutlet UIButton *getDeviceNameBtn;
-@property (nonatomic, weak) IBOutlet UILabel *deviceNameLabel;
-@property (nonatomic, weak) IBOutlet UIButton *getDeviceIDBtn;
-@property (nonatomic, weak) IBOutlet UILabel *deviceIDLabel;
-@property (nonatomic, weak) IBOutlet UIButton *getBatteryBtn;
-@property (nonatomic, weak) IBOutlet UILabel *batteryLabel;
-@property (nonatomic, weak) IBOutlet UIButton *getMacBtn;
-@property (nonatomic, weak) IBOutlet UILabel *macLabel;
 //firmwareInfo
 @property (nonatomic, weak) IBOutlet UITextField *deviceIDTextField;
 @property (nonatomic, weak) IBOutlet UITextField *firmwareVersionTextField;
 @property (nonatomic, weak) IBOutlet UIButton *upgradeBtn;
 @property (nonatomic, weak) IBOutlet UIView *firmwareInfoShell;
-@property (nonatomic, weak) IBOutlet UILabel *firmwareInfoSectionLabel;
-@property (nonatomic, weak) IBOutlet UIButton *getFirmwareVersionBtn;
-@property (nonatomic, weak) IBOutlet UILabel *firmwareVersionLabel;
 @property (nonatomic, weak) IBOutlet UIButton *bindBtn;
 @property (nonatomic, weak) IBOutlet UIButton *unBindBtn;
 
@@ -65,25 +50,10 @@
 
 - (void)setUI {
     [Utils configNormalButton:self.connectBtn];
-    [Utils configNormalButton:self.getDeviceNameBtn];
-    [Utils configNormalButton:self.getDeviceIDBtn];
-    [Utils configNormalButton:self.getBatteryBtn];
-    [Utils configNormalButton:self.getFirmwareVersionBtn];
-    [Utils configNormalButton:self.getMacBtn];
     [Utils configNormalButton:self.upgradeBtn];
     [Utils configNormalButton:self.bindBtn];
     [Utils configNormalButton:self.unBindBtn];
-
-    [Utils configNormalDetailLabel:self.deviceNameLabel];
-    [Utils configNormalDetailLabel:self.deviceIDLabel];
-    [Utils configNormalDetailLabel:self.batteryLabel];
-    [Utils configNormalDetailLabel:self.firmwareVersionLabel];
-    [Utils configNormalDetailLabel:self.macLabel];
-    
-    [Utils configSectionTitle:self.userIDTitleLabel];
-    [Utils configSectionTitle:self.deviceInfoSectionLabel];
-    [Utils configSectionTitle:self.firmwareInfoSectionLabel];
-    
+        
     self.ipTextField.placeholder = LocalizedString(@"server_ip");
     self.tokenTextField.placeholder = LocalizedString(@"enter_token");
     self.channelTextField.placeholder = LocalizedString(@"enter_id");
@@ -123,31 +93,10 @@
     self.firmwareVersionTextField.returnKeyType = UIReturnKeyDone;
     self.channelTextField.returnKeyType = UIReturnKeyDone;
     
-    [Utils setButton:self.getDeviceNameBtn title:LocalizedString(@"device_id_clear")];
-    [Utils setButton:self.getDeviceIDBtn title:LocalizedString(@"device_id_cipher")];
-    [Utils setButton:self.getBatteryBtn title:LocalizedString(@"obtain_electricity")];
-    [Utils setButton:self.getFirmwareVersionBtn title:LocalizedString(@"obtain_firmware")];
-    [Utils setButton:self.getMacBtn title:LocalizedString(@"obtain_mac_address")];
     [Utils setButton:self.upgradeBtn title:LocalizedString(@"fireware_update")];
     [Utils setButton:self.connectBtn title:LocalizedString(@"connect_server")];
     [Utils setButton:self.bindBtn title:LocalizedString(@"bind")];
     [Utils setButton:self.unBindBtn title:LocalizedString(@"unbind")];
-
-
-    [self.userIDTitleLabel setText:LocalizedString(@"userid_sync_sleep")];
-    [self.deviceInfoSectionLabel setText:LocalizedString(@"device_infos")];
-    [self.firmwareInfoSectionLabel setText:LocalizedString(@"firmware_info")];
-        
-    self.userIDLabel.keyboardType = UIKeyboardTypeNumberPad;
-    [self.userIDLabel setTextColor:Theme.C3];
-    [self.userIDLabel setFont:Theme.T3];
-    
-    [self.userIDLabel.layer setMasksToBounds:YES];
-    [self.userIDLabel.layer setCornerRadius:2.0];
-    [self.userIDLabel.layer setBorderWidth:1.0];
-    [self.userIDLabel.layer setBorderColor:Theme.normalLineColor.CGColor];
-    [self.userIDLabel setText:[DataManager sharedDataManager].userID];
-    [self.userIDLabel setPlaceholder:LocalizedString(@"enter_userid")];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

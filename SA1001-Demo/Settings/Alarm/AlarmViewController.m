@@ -579,7 +579,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         @"aromatherapyRate":@(self.alarmDataNew.aromaRate),
         @"oscillator":@(self.alarmDataNew.shake),
         @"musicId":@(self.alarmDataNew.musicID),
-        @"timeStamp":@(self.alarmDataNew.timestamp),
+        @"timeStamp":@([[NSDate date] timeIntervalSince1970]),
     };
     [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         NSLog(@"configAlarm----------------%@", responseObject);

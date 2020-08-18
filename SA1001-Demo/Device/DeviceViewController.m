@@ -42,7 +42,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.titleLabel.text = LocalizedString(@"device");
+    self.titleLabel.text = LocalizedString(@"login_in");
     
     [self setUI];
     [self addNotificationObservre];
@@ -59,7 +59,8 @@
     self.channelTextField.placeholder = LocalizedString(@"enter_id");
 
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id_cipher");
-    self.firmwareVersionTextField.placeholder = LocalizedString(@"target_version");
+    self.firmwareVersionTextField.placeholder = LocalizedString(@"firmware_info");
+    self.firmwareVersionTextField.userInteractionEnabled = NO;
     self.ipTextField.text = @"http://120.24.169.204:8091";
     if (SharedDataManager.ip.length > 0) {
         self.ipTextField.text = SharedDataManager.ip;
@@ -230,6 +231,19 @@
 - (IBAction)upgradeClicked:(id)sender {
     __weak typeof(self) weakSelf = self;
     
+    if (!SharedDataManager.upgradeVersion) {
+        [Utils showMessage:LocalizedString(@"latest_version") controller:self];
+        return;
+    }
+    
+    double currentVersion = round(SharedDataManager.currentVersion * 100);
+    double upgradeVersion = round(SharedDataManager.upgradeVersion * 100);
+    
+    if (currentVersion >= upgradeVersion) {
+        [Utils showMessage:LocalizedString(@"latest_version") controller:self];
+        return;
+    }
+    
     if (self.deviceIDTextField.text.length == 0 && SharedDataManager.deviceID.length == 0) {
         [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
         return;
@@ -241,9 +255,6 @@
     
     SLPLoadingBlockView *loadingView = [self showLoadingView];
     [loadingView setText:LocalizedString(@"upgrading")];
-    
-    double currentVersion = round(SharedDataManager.currentVersion * 100);
-    double upgradeVersion = round(SharedDataManager.upgradeVersion * 100);
     
     [SLPSharedLTcpManager salCurrentHardwareVersion:currentVersion upgradeHardwareVersion:upgradeVersion upgradeType:3 url:SharedDataManager.upgradeUrl deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed)///通知升级成功（获取进度)
@@ -349,6 +360,7 @@
             [Utils showMessage:LocalizedString(@"bind_account_success") controller:weakSelf];
             SharedDataManager.deviceName = self.deviceIDTextField.text;
             [[NSUserDefaults standardUserDefaults] setValue:self.deviceIDTextField.text forKey:@"deviceName"];
+            [weakSelf getBindDeviceInfo];
         } else {
             [Utils showMessage:LocalizedString(@"bind_fail") controller:weakSelf];
         }

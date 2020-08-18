@@ -196,8 +196,7 @@
     self.brightnessTextFiled.text = @"";
     self.volTextField.text = @"";
     
-    self.currentAromaBtn.selected = NO;
-//    [self setUI];
+//    self.currentAromaBtn.selected = NO;
     
     [self getWorkMode];
     [self getSleepAidInfo];
@@ -359,6 +358,26 @@
     [self.saveBtn setTitle:LocalizedString(@"save") forState:UIControlStateNormal];
     self.saveBtn.layer.masksToBounds = YES;
     self.saveBtn.layer.cornerRadius = 5;
+    
+    self.currentAromaBtn.selected = NO;
+    switch (SharedDataManager.aidInfo.aromaRate) {
+        case 1:
+            self.slowBtn.selected = YES;
+            self.currentAromaBtn = self.slowBtn;
+            break;
+        case 2:
+            self.midBtn.selected = YES;
+            self.currentAromaBtn = self.midBtn;
+            break;
+        case 3:
+            self.fastBtn.selected = YES;
+            self.currentAromaBtn = self.fastBtn;
+            break;
+        default:
+            self.openAroma.selected = YES;
+            self.currentAromaBtn = self.openAroma;
+            break;
+    }
 }
 
 - (void)getWorkMode
@@ -368,6 +387,7 @@
         if (status == SLPDataTransferStatus_Succeed) {
             SA1001WorkMode *mode = (SA1001WorkMode *)data;
             [weakSelf updateLigntBtn:mode.isLightOn];
+            [weakSelf updatePlayBtn:(mode.musicStatus == 1)];
         }
     }];
 }
@@ -382,6 +402,16 @@
         self.openLightBtn.userInteractionEnabled = YES;
     }
 }
+
+- (void)updatePlayBtn:(BOOL)play
+{
+    self.stopMusicBtn.selected = play;
+    self.isPlayingMusic = play;
+    
+    NSString *title = play ? LocalizedString(@"pause") : LocalizedString(@"play");
+    [self.stopMusicBtn setTitle:title forState:UIControlStateNormal];
+}
+
 - (void)getSleepAidInfo
 {
     __weak typeof(self) weakSelf = self;

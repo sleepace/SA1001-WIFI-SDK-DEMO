@@ -79,9 +79,9 @@
 {
     [super viewWillAppear:animated];
     
-    self.colorRTextField.text = @"";
-    self.colorGTextfFiled.text = @"";
-    self.colorBTextFiled.text = @"";
+    self.colorRTextField.text = @"255";
+    self.colorGTextfFiled.text = @"104";
+    self.colorBTextFiled.text = @"11";
     self.colorWTextFiled.text = @"";
     self.brightnessTextFiled.text = @"";
     

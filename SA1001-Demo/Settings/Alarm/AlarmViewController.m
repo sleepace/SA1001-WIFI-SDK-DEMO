@@ -566,7 +566,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     [self showLoadingView];
     NSDictionary *par = @{
         @"alarmId":@(self.alarmDataNew.alarmID),
-        @"alarmFlag" : @(self.alarmDataNew.isOpen),
+        @"alarmFlag" : @(self.alarmDataNew.isOpen ? 1 : 0),
         @"smartFlag":@(self.alarmDataNew.smartFlag),
         @"smartOffset":@(self.alarmDataNew.smartOffset),
         @"hour":@(self.alarmDataNew.hour),
@@ -577,7 +577,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         @"volum":@(self.alarmDataNew.volume),
         @"lightStrength":@(self.alarmDataNew.brightness),
         @"aromatherapyRate":@(self.alarmDataNew.aromaRate),
-        @"oscillator":@(self.alarmDataNew.shake),
+        @"oscillator":@(self.alarmDataNew.shake ? 1 : 0),
         @"musicId":@(self.alarmDataNew.musicID),
         @"timeStamp":@([[NSDate date] timeIntervalSince1970]),
     };

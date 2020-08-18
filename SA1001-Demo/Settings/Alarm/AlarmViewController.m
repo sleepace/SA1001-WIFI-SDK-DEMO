@@ -563,6 +563,8 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     }
     __weak typeof(self) weakSelf = self;
     
+    NSInteger timeStamp = [[NSDate date] timeIntervalSince1970];
+    
     [self showLoadingView];
     NSDictionary *par = @{
         @"alarmId":@(self.alarmDataNew.alarmID),
@@ -579,7 +581,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         @"aromatherapyRate":@(self.alarmDataNew.aromaRate),
         @"oscillator":@(self.alarmDataNew.shake ? 1 : 0),
         @"musicId":@(self.alarmDataNew.musicID),
-        @"timeStamp":@([[NSDate date] timeIntervalSince1970]),
+        @"timeStamp":@(timeStamp),
     };
     [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         NSLog(@"configAlarm----------------%@", responseObject);

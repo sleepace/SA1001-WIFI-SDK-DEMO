@@ -231,7 +231,7 @@
 - (IBAction)upgradeClicked:(id)sender {
     __weak typeof(self) weakSelf = self;
     
-    if (!SharedDataManager.upgradeVersion) {
+    if (!SharedDataManager.upgradeVersion || !SharedDataManager.currentVersion) {
         [Utils showMessage:LocalizedString(@"latest_version") controller:self];
         return;
     }

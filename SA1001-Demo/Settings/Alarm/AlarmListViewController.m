@@ -65,8 +65,8 @@
                                 info.hour = [alarmDic[@"hour"] integerValue];
                                 info.minute = [alarmDic[@"min"] integerValue];
                                 info.flag = [alarmDic[@"week"] integerValue];
-                                info.snoozeTime = [alarmDic[@"lazyTime"] integerValue];
-                                info.snoozeLength = [alarmDic[@"lazyTimes"] integerValue];
+                                info.snoozeLength = [alarmDic[@"lazyTime"] integerValue];
+                                info.snoozeTime = [alarmDic[@"lazyTimes"] integerValue];
                                 info.volume = [alarmDic[@"volum"] integerValue];
                                 info.brightness = [alarmDic[@"lightStrength"] integerValue];
                                 info.shake = [alarmDic[@"oscillator"] boolValue];

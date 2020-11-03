@@ -583,7 +583,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         @"musicId":@(self.alarmDataNew.musicID),
         @"timeStamp":@(timeStamp),
     };
-    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         NSLog(@"configAlarm----------------%@", responseObject);
         [weakSelf unshowLoadingView];
         if (!result) {
@@ -613,7 +613,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salStartAlarmRreviewVolume:self.alarmDataNew.volume brightness:self.alarmDataNew.brightness aromaRate:self.alarmDataNew.aromaRate musicID:self.alarmDataNew.musicID deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salStartAlarmRreviewVolume:self.alarmDataNew.volume brightness:self.alarmDataNew.brightness aromaRate:self.alarmDataNew.aromaRate musicID:self.alarmDataNew.musicID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -629,7 +629,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salStopAlarmRreviewWithDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salStopAlarmRreviewWithDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -645,7 +645,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedHTTPManager deleteAlarmWithAlarmID:self.alarmDataNew.alarmID deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager deleteAlarmWithAlarmID:self.alarmDataNew.alarmID deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (!result) {
             [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{

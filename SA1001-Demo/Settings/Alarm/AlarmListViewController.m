@@ -41,7 +41,7 @@
 - (void)loadData
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedHTTPManager getAlarmListWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager getAlarmListWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (result) {
             NSDictionary *data = responseObject[@"data"];
             if ([data isKindOfClass:[NSDictionary class]]) {
@@ -165,7 +165,7 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             [weakSelf.tableView reloadData];
@@ -179,7 +179,7 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             [weakSelf.tableView reloadData];

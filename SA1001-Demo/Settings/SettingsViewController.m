@@ -74,7 +74,7 @@ enum {
 
 - (void)getCenterKey
 {
-    [SLPSharedHTTPManager getCenterKeyWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager getCenterKeyWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (result) {
             NSDictionary *data = responseObject[@"data"];
             if ([data isKindOfClass:[NSDictionary class]]) {
@@ -143,7 +143,7 @@ enum {
     }
 //    __weak typeof(self) weakSelf = self;
     
-//    [SLPSharedMLanManager sal:SharedDataManager.deviceName deviceInitTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//    [SLPSharedMLanManager sal:SharedDataManager.deviceID deviceInitTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
 //        if (status != SLPDataTransferStatus_Succeed) {
 //            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
 //        }else{

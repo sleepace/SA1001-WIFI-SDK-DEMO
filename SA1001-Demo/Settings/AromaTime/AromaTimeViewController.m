@@ -79,7 +79,7 @@
         @"rate":@"2",
         @"timeRange":@(self.timeDataNew.lastMin),
     };
-    [SLPSharedHTTPManager configTimeAromaInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager configTimeAromaInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (!result) {
             [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
@@ -185,7 +185,7 @@
     }
     __weak typeof(self) weakSelf = self;
     UInt64 seqId = [self.timeDataNew.seqId intValue];
-    [SLPSharedHTTPManager deleteTimeAromaWithID:seqId deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager deleteTimeAromaWithID:seqId deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (!result) {
             [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{

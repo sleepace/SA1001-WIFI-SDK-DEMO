@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import <SLPTCP/SA1001AidInfo.h>
 
 #define SharedDataManager [DataManager sharedDataManager]

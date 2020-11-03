@@ -81,7 +81,7 @@
     }
     __weak typeof(self) weakSelf = self;
     if (self.mode == FromMode_Alarm) {
-        [SLPSharedLTcpManager salTurnOnMusic:musicID volume:12 playMode:2 deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOnMusic:musicID volume:12 playMode:2 deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             }else{
@@ -111,7 +111,7 @@
             [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
             return;
         }
-        [SLPSharedLTcpManager salTurnOffMusicDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOffMusicDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             }else{

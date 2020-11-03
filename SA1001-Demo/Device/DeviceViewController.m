@@ -66,8 +66,8 @@
         self.ipTextField.text = SharedDataManager.ip;
     }
 //    self.deviceIDTextField.text = @"tuohbgqlus60p";
-//    if (SharedDataManager.deviceName.length > 0) {
-//        self.deviceIDTextField.text = SharedDataManager.deviceName;
+//    if (SharedDataManager.deviceID.length > 0) {
+//        self.deviceIDTextField.text = SharedDataManager.deviceID;
 //    }
     
     if (SharedDataManager.token.length > 0) {
@@ -152,7 +152,7 @@
 
             NSDictionary *tcpDic = responseObject[@"data"][@"tcpServer"];
             
-            NSString *str = SharedDataManager.deviceName;
+            NSString *str = SharedDataManager.deviceID;
             NSLog(@"deviceID ---- %@",str);
             [[NSUserDefaults standardUserDefaults] setValue:self.channelTextField.text forKey:@"channelID"];
             SharedDataManager.channelID = self.channelTextField.text;
@@ -190,7 +190,7 @@
                         SharedDataManager.currentVersion = [deciNum1 doubleValue];
                         self.deviceIDTextField.text = dic[@"deviceId"];
                         
-                        SharedDataManager.deviceName = dic[@"deviceId"];
+                        SharedDataManager.deviceID = dic[@"deviceId"];
                         [[NSUserDefaults standardUserDefaults] setValue:dic[@"deviceId"] forKey:@"deviceName"];
                     }
                 }
@@ -250,13 +250,13 @@
     }
     
     if (self.deviceIDTextField.text.length != 0) {
-        SharedDataManager.deviceName = self.deviceIDTextField.text;
+        SharedDataManager.deviceID = self.deviceIDTextField.text;
     }
     
     SLPLoadingBlockView *loadingView = [self showLoadingView];
     [loadingView setText:LocalizedString(@"upgrading")];
     
-    [SLPSharedLTcpManager salCurrentHardwareVersion:currentVersion upgradeHardwareVersion:upgradeVersion upgradeType:3 url:SharedDataManager.upgradeUrl deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salCurrentHardwareVersion:currentVersion upgradeHardwareVersion:upgradeVersion upgradeType:3 url:SharedDataManager.upgradeUrl deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed)///通知升级成功（获取进度)
         {
             ///接收nox升级进度
@@ -358,7 +358,7 @@
     [SLPSharedHTTPManager bindDeviceWithDeviceId:self.deviceIDTextField.text timeOut:0 completion:^(BOOL result, NSDictionary * _Nonnull dict, NSString * _Nonnull error) {
         if (result) {
             [Utils showMessage:LocalizedString(@"bind_account_success") controller:weakSelf];
-            SharedDataManager.deviceName = self.deviceIDTextField.text;
+            SharedDataManager.deviceID = self.deviceIDTextField.text;
             [[NSUserDefaults standardUserDefaults] setValue:self.deviceIDTextField.text forKey:@"deviceName"];
             [weakSelf getBindDeviceInfo];
         } else {
@@ -377,7 +377,7 @@
     __weak typeof(self) weakSelf = self;
     [SLPSharedHTTPManager unBindDeviceWithDeviceId:self.deviceIDTextField.text timeOut:0 completion:^(BOOL result, NSString * _Nonnull error) {
         if (result) {
-            SharedDataManager.deviceName = @"";
+            SharedDataManager.deviceID = @"";
             [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"deviceName"];
             [Utils showMessage:LocalizedString(@"unbind_success") controller:weakSelf];
         } else {

@@ -383,7 +383,7 @@
 - (void)getWorkMode
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
             SA1001WorkMode *mode = (SA1001WorkMode *)data;
             [weakSelf updateLigntBtn:mode.isLightOn];
@@ -415,7 +415,7 @@
 - (void)getSleepAidInfo
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedHTTPManager getAidInfoWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager getAidInfoWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         NSLog(@"getAIdInfo----------------%@", responseObject);
         if (result) {
             NSDictionary *data = responseObject[@"data"];
@@ -478,7 +478,7 @@
     }
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salSetSleepAidMusicVolume:vol deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetSleepAidMusicVolume:vol deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -519,7 +519,7 @@
 
 - (void)playMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedLTcpManager salTurnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }
@@ -528,7 +528,7 @@
 
 - (void)stopMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedLTcpManager salTurnOffSleepAidMusicDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffSleepAidMusicDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }
@@ -579,7 +579,7 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salTurnOnSleepAidLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOnSleepAidLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
             [weakSelf updateLigntBtn:YES];
         }else{
@@ -609,7 +609,7 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         } else {
@@ -661,7 +661,7 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salSetAssistAroma:rate deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetAssistAroma:rate deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -759,7 +759,7 @@
         @"smartWakeUp":@"0",
     };
     __weak typeof(self) weakSelf = self;
-    [SLPSharedHTTPManager configAidInfoWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager configAidInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (!result) {
             [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{

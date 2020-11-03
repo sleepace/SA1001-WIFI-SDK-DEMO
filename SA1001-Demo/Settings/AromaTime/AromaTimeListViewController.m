@@ -38,7 +38,7 @@
 - (void)loadData
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedHTTPManager getTimeAromaListWithDeviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager getTimeAromaListWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         if (result) {
             NSDictionary *data = responseObject[@"data"];
             if ([data isKindOfClass:[NSDictionary class]]) {
@@ -158,7 +158,7 @@
     timeInfo.enable = isOpen;
     
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salEditeTimeAromaList:self.aromaTimeList deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salEditeTimeAromaList:self.aromaTimeList deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             timeInfo.enable = oriEnable;

@@ -59,7 +59,7 @@
         @"music" : (musicEnable ? @"1" : @"0"),
         @"aromatherapy":(aromaEnable ? @"1" : @"0")
     };
-    [SLPSharedHTTPManager configCenterKeyWithParameters:par deviceInfo:SharedDataManager.deviceName deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+    [SLPSharedHTTPManager configCenterKeyWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
         NSLog(@"configCenterKey----------------%@", responseObject);
         if (!result) {
             [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];

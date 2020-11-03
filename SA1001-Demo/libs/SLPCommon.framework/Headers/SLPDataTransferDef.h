@@ -77,6 +77,7 @@ typedef NS_ENUM(NSInteger,SLPDeviceTypes) {
     SLPDeviceType_EW201W = 0x001E,//唤醒灯 WiFi版
     SLPDeviceType_Binatone = 0x0021,//贝纳通
     SLPDeviceType_P3 = 0x22,//p300
+    SLPDeviceType_P200A = 0x2E,//p200A
     SLPDeviceType_TWP2 = 0x25,//TWP-2
     SLPDeviceType_M800 = 0x26, // M800
     SLPDeviceType_SN913E = 0x2C, // SN913E

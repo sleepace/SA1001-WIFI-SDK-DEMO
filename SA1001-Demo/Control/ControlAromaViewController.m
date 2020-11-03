@@ -82,7 +82,7 @@
 - (void)getWorkMode
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
             SA1001WorkMode *mode = (SA1001WorkMode *)data;
             [weakSelf updateAromaBtn:(mode.aromaRate != 0)];
@@ -176,7 +176,7 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salSetAroma:rate deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetAroma:rate deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         } else {

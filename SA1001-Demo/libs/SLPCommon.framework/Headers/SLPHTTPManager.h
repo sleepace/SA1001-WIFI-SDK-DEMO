@@ -85,20 +85,6 @@ NS_ASSUME_NONNULL_BEGIN
                             completion:(void (^)(BOOL result,id responseObject, NSString *error))completion;
 
 /**
- *闹钟配置
- *@param parameters 传入参数字典，具体包含key见文档
- *@param deviceName 设备名
- *@param deviceType 设备类型
- *@param timeout 超时时间（秒s）
- *@param completion 回调
- */
-- (void)alarmConfigWithParameters:(NSDictionary *)parameters
-                       deviceInfo:(NSString *)deviceName
-                       deviceType:(SLPDeviceTypes)deviceType
-                          timeOut:(CGFloat)timeout
-                       completion:(void (^)(BOOL result,id responseObject, NSString *error))completion;
-
-/**
  *时钟休眠配置
  *@param parameters 传入参数字典，具体包含key见文档
  *@param deviceName 设备名

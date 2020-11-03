@@ -114,7 +114,7 @@
 - (void)getWorkMode
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
             SA1001WorkMode *mode = (SA1001WorkMode *)data;
             [weakSelf updateLigntBtn:mode.isLightOn];
@@ -179,7 +179,7 @@
             return;
         }
         __weak typeof(self) weakSelf = self;
-        [SLPSharedLTcpManager salTurnOnColorLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOnColorLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             } else {
@@ -209,7 +209,7 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salLightBrightness:brightness deviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salLightBrightness:brightness deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }
@@ -223,7 +223,7 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceName timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         } else {

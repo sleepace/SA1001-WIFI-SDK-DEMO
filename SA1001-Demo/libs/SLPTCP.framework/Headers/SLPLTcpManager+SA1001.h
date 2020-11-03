@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  睡眠辅助操作
- @param deviceID 设备名称
+ @param deviceID 设备ID
  @param operation 操作类型 0x00: 正常操作 0x01: 重新开启 0x02: 停止助眠 0x03: 暂停助眠 0x04: 恢复助眠 0x05: 缓慢停止辅助
  @param lightFlag 灯开关 0: 关 1: 开 0xFF: 保持原状态
  @param musicFlag 音乐开关 0: 关 1: 开 0xFF: 保持原状态
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  开始配置
- @param deviceID 设备名称
+ @param deviceID 设备ID
  @param mode 配置项 0x00: 测试模式(预留) 0x01: 日常模式 0x02: 睡眠辅助模式 0x03: 唤醒模式
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  结束配置
- @param deviceID 设备名称
+ @param deviceID 设备ID
  @param mode 配置项 0x00: 测试模式(预留) 0x01: 日常模式 0x02: 睡眠辅助模式 0x03: 唤醒模式
  @param operation 操作码 0x00: 取消 0x01: 保存
  @param timeout 超时（单位秒）
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  音乐下载
- @param deviceID 设备名称
+ @param deviceID 设备ID
  @param deviceType 设备类型
  @param musicType 音乐类型 1：助眠音乐 2：闹钟音乐
  @param operation 操作类型 1 下载 2删除 3其他预留
@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  中心按键功能设置
  @param deviceID
- 设备名称
+ 设备ID
 
  @param lightEnable 灯开关 （颜色为助眠灯颜色）
  @param musicEnable 音乐开关 音乐为助眠音乐）
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  删除所有定时香薰
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  删除定时香薰
  @param deviceID
- 设备名称
+ 设备ID
 
  @param aromaID 香薰ID
  @param timeout 超时（单位秒）
@@ -100,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  修改定时香薰 有则改，无则加
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeAromaList 定时香薰列表
  @param timeout 超时（单位秒）
@@ -111,7 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  工作状态查询
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时（单位秒）
  @param handle 回调 data类型为SA1001WorkMode
@@ -120,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  设置小夜灯
- @param deviceID 设备名称
+ @param deviceID 设备ID
 
  @param info 小夜灯信息
  @param timeout 超时（单位秒）
@@ -130,8 +130,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  控制香薰
- @param deviceID 设备名称
- 设备名称
+ @param deviceID 设备ID
+ 设备ID
 
  @param rate 香薰速率 0-3 0：关闭
  @param timeout 超时时间（单位秒）
@@ -142,7 +142,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开白光
  @param deviceID
- 设备名称
+ 设备ID
 
  @param light 灯光结构
  @param brightness 灯光亮度(0-100) 0:不亮
@@ -154,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开彩光
  @param deviceID
- 设备名称
+ 设备ID
 
  @param light 灯光结构
  @param brightness 灯光亮度(0-100) 0:不亮
@@ -167,7 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
  打开流光
  
  @param deviceID
- 设备名称
+ 设备ID
 
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
@@ -178,7 +178,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  灯光亮度调节
  @param deviceID
- 设备名称
+ 设备ID
 
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
@@ -189,7 +189,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  关灯
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -199,7 +199,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开音乐
  @param deviceID
- 设备名称
+ 设备ID
 
  @param musicID 音乐ID
  @param volume 音量 音量(0-16) 0:静音
@@ -212,7 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  停止音乐
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -222,7 +222,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  暂停音乐
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -232,7 +232,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  设置音量
  @param deviceID
- 设备名称
+ 设备ID
 
  @param volume 音量(0-16) 0:静音
  @param timeout 超时时间（单位秒)
@@ -243,7 +243,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开助眠灯
  @param deviceID
- 设备名称
+ 设备ID
 
  @param light 灯结构
  @param brightness 灯光亮度(0-100) 0:不亮
@@ -255,7 +255,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  助眠灯亮度调节
  @param deviceID
- 设备名称
+ 设备ID
 
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
@@ -266,7 +266,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开助眠音乐
  @param deviceID
- 设备名称
+ 设备ID
 
  @param musicID 音乐ID
  @param volume 音量(0-16) 0:静音
@@ -279,7 +279,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  停止助眠音乐
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -289,7 +289,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  助眠音量调节
  @param deviceID
- 设备名称
+ 设备ID
 
  @param volume 音量(0-16) 0:静音
  @param timeout 超时时间（单位秒)
@@ -300,7 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  设置助眠香薰
  @param deviceID
- 设备名称
+ 设备ID
 
  @param rate 香薰速率 0-3 0：关闭
  @param timeout 超时时间（单位秒）
@@ -312,9 +312,9 @@ NS_ASSUME_NONNULL_BEGIN
  保存助眠配置信息
  
  @param deviceID
- 设备名称
+ 设备ID
 
- @param monitor 监测设备名称 没有监测设备传空字符串或nil
+ @param monitor 监测设备ID 没有监测设备传空字符串或nil
  @param type 监测设备类型 没有监测设备传0
  @param info 助眠信息
  @param timeout 超时时间（单位秒)
@@ -325,7 +325,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  添加或修改闹铃
  @param deviceID
- 设备名称
+ 设备ID
 
  @param alarmInfo 闹钟信息
  @param timeout 超时（单位秒）
@@ -343,7 +343,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开闹铃
  @param deviceID
- 设备名称
+ 设备ID
 
  @param alarmID 闹钟ID
  @param timeout 超时（单位秒）
@@ -354,7 +354,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  关闭闹铃
  @param deviceID
- 设备名称
+ 设备ID
 
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
@@ -365,7 +365,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  删除闹铃
  @param deviceID
- 设备名称
+ 设备ID
 
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
@@ -376,7 +376,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  闹铃预览
  @param deviceID
- 设备名称
+ 设备ID
 
  @param volume 音量大小 闹钟最大音量(0-16) 0:静音
  @param brightness 灯光亮度 灯光最大亮度(0-100) 0:不亮
@@ -390,7 +390,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  退出闹铃预览
  @param deviceID
- 设备名称
+ 设备ID
 
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -400,7 +400,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  启用闹铃 只启用, 不开闹钟
  @param deviceID
- 设备名称
+ 设备ID
 
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
@@ -411,7 +411,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  禁用闹铃 当前该闹钟在运行，则停止
  @param deviceID
- 设备名称
+ 设备ID
 
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
@@ -422,7 +422,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  设备开始升级
  @param deviceID
- 设备名称
+ 设备ID
  
  @param currentHardwareVersion 设备当前版本号
  @param upgradeHardwareVersion 升级版本号

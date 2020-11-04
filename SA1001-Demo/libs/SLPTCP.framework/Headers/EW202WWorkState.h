@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <BluetoothManager/BluetoothManager.h>
+#import <SLPCommon/SLPLight.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

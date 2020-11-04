@@ -63,9 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  中心按键功能设置
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param lightEnable 灯开关 （颜色为助眠灯颜色）
  @param musicEnable 音乐开关 音乐为助眠音乐）
  @param aromaEnable 香薰开关 香薰速率为助眠香薰速率
@@ -76,9 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  删除所有定时香薰
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param timeout 超时（单位秒）
  @param handle 回调
  */
@@ -87,9 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  删除定时香薰
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param aromaID 香薰ID
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -99,9 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  修改定时香薰 有则改，无则加
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param timeAromaList 定时香薰列表
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -110,9 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  工作状态查询
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param timeout 超时（单位秒）
  @param handle 回调 data类型为SA1001WorkMode
  */
@@ -121,7 +111,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  设置小夜灯
  @param deviceID 设备ID
-
  @param info 小夜灯信息
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -131,8 +120,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  控制香薰
  @param deviceID 设备ID
- 设备ID
-
  @param rate 香薰速率 0-3 0：关闭
  @param timeout 超时时间（单位秒）
  @param handle 回调
@@ -141,9 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  打开白光
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param light 灯光结构
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒）
@@ -153,9 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  打开彩光
- @param deviceID
- 设备ID
-
+ @param deviceID  设备ID
  @param light 灯光结构
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒）
@@ -166,9 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  打开流光
  
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -177,9 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  灯光亮度调节
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -188,9 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  关灯
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param timeout 超时时间（单位秒)
  @param handle 回调
  */
@@ -198,9 +175,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  打开音乐
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param musicID 音乐ID
  @param volume 音量 音量(0-16) 0:静音
  @param playMode //播放模式 0：顺序播放 1: 随机播放 2: 单曲播放
@@ -211,9 +186,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  停止音乐
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param timeout 超时时间（单位秒)
  @param handle 回调
  */
@@ -221,9 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  暂停音乐
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param timeout 超时时间（单位秒)
  @param handle 回调
  */
@@ -231,9 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  设置音量
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param volume 音量(0-16) 0:静音
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -242,9 +211,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  打开助眠灯
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param light 灯结构
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
@@ -254,9 +221,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  助眠灯亮度调节
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param brightness 灯光亮度(0-100) 0:不亮
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -265,9 +230,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  打开助眠音乐
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param musicID 音乐ID
  @param volume 音量(0-16) 0:静音
  @param playMode 播放模式 0：顺序播放 1: 随机播放 2: 单曲播放
@@ -278,9 +241,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  停止助眠音乐
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param timeout 超时时间（单位秒)
  @param handle 回调
  */
@@ -288,9 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  助眠音量调节
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param volume 音量(0-16) 0:静音
  @param timeout 超时时间（单位秒)
  @param handle 回调
@@ -299,9 +258,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  设置助眠香薰
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param rate 香薰速率 0-3 0：关闭
  @param timeout 超时时间（单位秒）
  @param handle 回调
@@ -311,9 +268,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  保存助眠配置信息
  
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param monitor 监测设备ID 没有监测设备传空字符串或nil
  @param type 监测设备类型 没有监测设备传0
  @param info 助眠信息
@@ -324,9 +279,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  添加或修改闹铃
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param alarmInfo 闹钟信息
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -334,7 +287,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)salAlarmConfig:(SA1001AlarmInfo *)alarmInfo deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 /**
-获取闹钟设置(暂时未支持)
+ 获取闹钟设置(暂时未支持)
  @param timeout 超时（单位秒）
  @param handle 回调
  */
@@ -342,9 +295,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  打开闹铃
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param alarmID 闹钟ID
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -353,9 +304,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  关闭闹铃
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -364,9 +313,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  删除闹铃
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -375,9 +322,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  闹铃预览
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param volume 音量大小 闹钟最大音量(0-16) 0:静音
  @param brightness 灯光亮度 灯光最大亮度(0-100) 0:不亮
  @param aromaRate 香薰速率 0：关 1-3：三挡速率
@@ -389,9 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  退出闹铃预览
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param timeout 超时（单位秒）
  @param handle 回调
  */
@@ -399,9 +342,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  启用闹铃 只启用, 不开闹钟
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -410,9 +351,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  禁用闹铃 当前该闹钟在运行，则停止
- @param deviceID
- 设备ID
-
+ @param deviceID 设备ID
  @param alarmID 闹铃ID
  @param timeout 超时（单位秒）
  @param handle 回调
@@ -421,9 +360,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  设备开始升级
- @param deviceID
- 设备ID
- 
+ @param deviceID 设备ID
  @param currentHardwareVersion 设备当前版本号
  @param upgradeHardwareVersion 升级版本号
  @param upgradeType 升级类型

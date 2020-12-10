@@ -65,7 +65,7 @@
     if (SharedDataManager.ip.length > 0) {
         self.ipTextField.text = SharedDataManager.ip;
     }
-    self.deviceIDTextField.text = @"o0zguh6yxmi5o";
+    self.deviceIDTextField.text = @"tuohbgqlus60p";
     
     if (SharedDataManager.token.length > 0) {
         self.tokenTextField.text = SharedDataManager.token;

@@ -264,7 +264,7 @@
 "bind_fail"="Failed！";
 "unbind_success"="Successful!";
 "unbind_failed"="Failed！";
-"bind"="Connect";
+"bind"="Bind";
 "unbind"="Unbind";
 "complete"="Please Complete";
 "confirm_correctly"="Failed to connect to the server, please confirm whether the information is entered correctly";

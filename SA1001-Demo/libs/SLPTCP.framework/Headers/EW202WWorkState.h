@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) UInt8 asssitLightStaus;//助眠灯光状态 0: 关 1: 开
 @property (nonatomic,assign) UInt8 assistMusicStatus;//助眠音乐状态 0：关 1：开
 @property (nonatomic,assign) UInt16 assistMusicID;//助眠音乐ID
-@property (nonatomic,assign) UInt8 assistTimeRemained;//助眠剩余时长
+@property (nonatomic,assign) UInt8 sleepAidLeftTime;//助眠剩余时长
 @property (nonatomic,assign) UInt32 channelNum;//通道号 0：本地上报 其他：云端或APP请求上报
 @end
 

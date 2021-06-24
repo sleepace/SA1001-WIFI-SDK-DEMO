@@ -62,37 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)salDownloadMusicWithDeviceType:(SLPDeviceTypes)deviceType musicType:(UInt8)musicType operation:(UInt8)operation musicID:(UInt16)musicID deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 /**
- 中心按键功能设置
- @param deviceID  设备ID
- @param lightEnable 灯开关 （颜色为助眠灯颜色）
- @param musicEnable 音乐开关 音乐为助眠音乐）
- @param aromaEnable 香薰开关 香薰速率为助眠香薰速率
- @param timeout 超时（单位秒）
- @param handle 回调
- */
-- (void)salSetCenterKey:(BOOL)lightEnable musicEnable:(BOOL)musicEnable aromaEnable:(BOOL)aromaEnable deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
-
-/**
- 删除所有定时香薰
- @param deviceID  设备ID
- @param timeout 超时（单位秒）
- @param handle 回调
- */
-- (void)sal:(NSString *)salName removeAllTimeAromaDeviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
-
-
-/**
- 删除定时香薰
- @param deviceID  设备ID
- @param aromaID 香薰ID
- @param timeout 超时（单位秒）
- @param handle 回调
- */
-- (void)salDeleteTimeAroma:(UInt64)aromaID deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
-
-
-/**
- 修改定时香薰 有则改，无则加
+ 打开，关闭定时香薰
  @param deviceID  设备ID
  @param timeAromaList 定时香薰列表
  @param timeout 超时（单位秒）
@@ -107,15 +77,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param handle 回调 data类型为SA1001WorkMode
  */
 - (void)salGetWorkStatusDeviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
-
-/**
- 设置小夜灯
- @param deviceID 设备ID
- @param info 小夜灯信息
- @param timeout 超时（单位秒）
- @param handle 回调
- */
-- (void)salNightLightConfig:(SA1001NightLightInfo *)info deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 /**
  控制香薰
@@ -266,18 +227,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)salSetAssistAroma:(UInt8)rate deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 /**
- 保存助眠配置信息
- 
- @param deviceID 设备ID
- @param monitor 监测设备ID 没有监测设备传空字符串或nil
- @param type 监测设备类型 没有监测设备传0
- @param info 助眠信息
- @param timeout 超时时间（单位秒)
- @param handle 回调
- */
-- (void)salSleepAidConfig:(SA1001AidInfo *)info monitorDevice:(NSString *)monitor monitorDeviceType:(SLPDeviceTypes)type deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
-
-/**
  添加或修改闹铃
  @param deviceID 设备ID
  @param alarmInfo 闹钟信息
@@ -285,13 +234,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param handle 回调
  */
 - (void)salAlarmConfig:(SA1001AlarmInfo *)alarmInfo deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
-
-/**
- 获取闹钟设置(暂时未支持)
- @param timeout 超时（单位秒）
- @param handle 回调
- */
-//- (void)getSalConfigureAlarmTimeout:(CGFloat)timeout completion:(SLPTransforCallback)handle;
 
 /**
  打开闹铃
@@ -311,14 +253,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)salTurnOffAlarm:(UInt64)alarmID deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
-/**
- 删除闹铃
- @param deviceID 设备ID
- @param alarmID 闹铃ID
- @param timeout 超时（单位秒）
- @param handle 回调
- */
-- (void)salDelAlarm:(UInt64)alarmID deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 /**
  闹铃预览

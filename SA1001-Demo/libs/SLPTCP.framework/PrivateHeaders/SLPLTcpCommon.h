@@ -144,6 +144,32 @@ enum{
     SLP_LTcp_Error_UnKnown = 0xff,//未知错误
 };
 
+typedef NS_ENUM(UInt8, LTcpOperationMode) {
+    LTcpOperationMode_Normal = 0x00,
+    LTcpOperationMode_Lighting, //照明
+    LTcpOperationMode_Assist, //助眠
+    LTcpOperationMode_PreAssist, //预助眠
+};
+
+typedef NS_ENUM(UInt8, LTcpLightOperation) {
+    LTcpLightOperation_OFF = 0x00,
+    LTcpLightOperation_ON,
+    LTcpLightOperation_SetBrightness,//设置亮度
+};
+
+typedef NS_ENUM(UInt8, LTcpLightOperationMode) {
+    LTcpLightOperationMode_Normal = 0x00,
+    LTcpLightOperationMode_Lighting, //照明
+    LTcpLightOperationMode_Assist, //助眠
+    LTcpLightOperationMode_PreAssist, //预助眠
+};
+
+typedef NS_ENUM(UInt8, LTcpLightMode) {
+    LTcpLightMode_White = 0x00,
+    LTcpLightMode_Color,
+    LTcpLightMode_Fluxay,
+};
+
 #define kLTCPDefaultTimeoutInterval (10.0)
 #define kBLEDefaultConnectTimeoutInterval (10.0)
 //获取TCP消息类型的描述

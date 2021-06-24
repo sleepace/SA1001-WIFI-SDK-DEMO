@@ -262,6 +262,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)salSetAssistAroma:(UInt8)rate deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
 
 /**
+ 添加或修改闹铃
+ @param deviceID 设备ID
+ @param alarmInfo 闹钟信息
+ @param timeout 超时（单位秒）
+ @param handle 回调
+ */
+- (void)salAlarmConfig:(SA1001AlarmInfo *)alarmInfo deviceInfo:(NSString *)deviceID timeout:(CGFloat)timeout callback:(SLPTransforCallback)handle;
+
+
+/**
  打开闹铃
  @param deviceID
  设备ID

@@ -562,17 +562,38 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         return;
     }
     __weak typeof(self) weakSelf = self;
-        
+    
+    NSInteger timeStamp = [[NSDate date] timeIntervalSince1970];
+    
     [self showLoadingView];
-    [SLPSharedLTcpManager salAlarmConfig:self.alarmDataNew deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    NSDictionary *par = @{
+        @"alarmId":@(self.alarmDataNew.alarmID),
+        @"alarmFlag" : @(self.alarmDataNew.isOpen ? 1 : 0),
+        @"smartFlag":@(self.alarmDataNew.smartFlag),
+        @"smartOffset":@(self.alarmDataNew.smartOffset),
+        @"hour":@(self.alarmDataNew.hour),
+        @"min":@(self.alarmDataNew.minute),
+        @"week":@(self.alarmDataNew.flag),
+        @"lazyTime":@(self.alarmDataNew.snoozeLength),
+        @"lazyTimes":@(self.alarmDataNew.snoozeTime),
+        @"volum":@(self.alarmDataNew.volume),
+        @"lightStrength":@(self.alarmDataNew.brightness),
+        @"aromatherapyRate":@(self.alarmDataNew.aromaRate),
+        @"oscillator":@(self.alarmDataNew.shake ? 1 : 0),
+        @"musicId":@(self.alarmDataNew.musicID),
+        @"timeStamp":@(timeStamp),
+    };
+    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"configAlarm----------------%@", responseObject);
         [weakSelf unshowLoadingView];
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
             if ([weakSelf.delegate respondsToSelector:@selector(editAlarmInfoAndShouldReload)]) {
                 [weakSelf.delegate editAlarmInfoAndShouldReload];
             }
-            [weakSelf.navigationController popViewControllerAnimated:YES];        }
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
     }];
 }
 

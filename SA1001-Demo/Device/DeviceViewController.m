@@ -61,11 +61,11 @@
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id_cipher");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"firmware_info");
     self.firmwareVersionTextField.userInteractionEnabled = NO;
-    self.ipTextField.text = @"http://120.24.169.204:8091";
+    self.ipTextField.text = @"http://120.24.68.136:8091";
     if (SharedDataManager.ip.length > 0) {
         self.ipTextField.text = SharedDataManager.ip;
     }
-//    self.deviceIDTextField.text = @"tuohbgqlus60p";
+    self.deviceIDTextField.text = @"pfsn0pn95cf51";
 //    if (SharedDataManager.deviceID.length > 0) {
 //        self.deviceIDTextField.text = SharedDataManager.deviceID;
 //    }
@@ -73,11 +73,11 @@
     if (SharedDataManager.token.length > 0) {
         self.tokenTextField.text = SharedDataManager.token;
     } else {
-        self.tokenTextField.text = @"chen";
+        self.tokenTextField.text = @"f7d2551aa6544cff819d1332fa9a05ad";
 //        self.tokenTextField.text = @"r8xfa7hdjcm6";
     }
     
-    self.channelTextField.text = @"13700";
+    self.channelTextField.text = @"54300";
     if (SharedDataManager.channelID.length > 0) {
         self.channelTextField.text = SharedDataManager.channelID;
     }
@@ -183,7 +183,7 @@
             if ([data isKindOfClass:[NSArray class]]) {
                 NSDictionary *dic = [data firstObject];
                 if ([dic isKindOfClass:[NSDictionary class]]) {
-                    if ([dic[@"deviceName"] hasPrefix:@"SA11"]) {
+                    if ([dic[@"deviceName"] hasPrefix:@"sa11"]) {
                         self.firmwareVersionTextField.text = [NSString stringWithFormat:@"%.2f",[dic[@"deviceVersion"] floatValue]];
                         NSDecimalNumber *deciNum1 = [NSDecimalNumber decimalNumberWithString:self.firmwareVersionTextField.text];
 

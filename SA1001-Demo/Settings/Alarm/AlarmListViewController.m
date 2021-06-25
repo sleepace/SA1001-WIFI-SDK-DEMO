@@ -29,6 +29,11 @@
 
 @implementation AlarmListViewController
 
+- (void)dealloc {
+    NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
+    [notificationCeter removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -36,6 +41,20 @@
     [self loadData];
     
     [self setUI];
+    [self addNotificationObservre];
+}
+
+- (void)addNotificationObservre {
+    NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
+    
+    [notificationCeter addObserver:self selector:@selector(workModeChange:) name:kNotificationNameSA1001WorkModeChanged object:nil];
+}
+
+- (void)workModeChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    SA1001WorkMode *workStatus=[userInfo objectForKey:kNotificationPostData];
+
+    [self loadData];
 }
 
 - (void)loadData
@@ -46,6 +65,7 @@
             NSDictionary *data = responseObject[@"data"];
             if ([data isKindOfClass:[NSDictionary class]]) {
                 NSString *configJson = data[@"configJson"];
+                NSLog(@"%@",configJson);
                 if (configJson) {
                     NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
                     NSError *err;
@@ -165,9 +185,38 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        if (status != SLPDataTransferStatus_Succeed) {
+//            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//            [weakSelf.tableView reloadData];
+//        }else{
+//            alarmInfo.isOpen = YES;
+//        }
+//    }];
+    
+    NSInteger timeStamp = [[NSDate date] timeIntervalSince1970];
+    
+    NSDictionary *par = @{
+        @"alarmId":@(alarmInfo.alarmID),
+        @"alarmFlag" : @(1),
+        @"smartFlag":@(alarmInfo.smartFlag),
+        @"smartOffset":@(alarmInfo.smartOffset),
+        @"hour":@(alarmInfo.hour),
+        @"min":@(alarmInfo.minute),
+        @"week":@(alarmInfo.flag),
+        @"lazyTime":@(alarmInfo.snoozeLength),
+        @"lazyTimes":@(alarmInfo.snoozeTime),
+        @"volum":@(alarmInfo.volume),
+        @"lightStrength":@(alarmInfo.brightness),
+        @"aromatherapyRate":@(alarmInfo.aromaRate),
+        @"oscillator":@(alarmInfo.shake ? 1 : 0),
+        @"musicId":@(alarmInfo.musicID),
+        @"timeStamp":@(timeStamp),
+    };
+    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"configAlarm----------------%@", responseObject);
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
             [weakSelf.tableView reloadData];
         }else{
             alarmInfo.isOpen = YES;
@@ -179,12 +228,41 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        if (status != SLPDataTransferStatus_Succeed) {
+//            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//            [weakSelf.tableView reloadData];
+//        }else{
+//            alarmInfo.isOpen = NO;
+//        }
+//    }];
+    
+    NSInteger timeStamp = [[NSDate date] timeIntervalSince1970];
+    
+    NSDictionary *par = @{
+        @"alarmId":@(alarmInfo.alarmID),
+        @"alarmFlag" : @(0),
+        @"smartFlag":@(alarmInfo.smartFlag),
+        @"smartOffset":@(alarmInfo.smartOffset),
+        @"hour":@(alarmInfo.hour),
+        @"min":@(alarmInfo.minute),
+        @"week":@(alarmInfo.flag),
+        @"lazyTime":@(alarmInfo.snoozeLength),
+        @"lazyTimes":@(alarmInfo.snoozeTime),
+        @"volum":@(alarmInfo.volume),
+        @"lightStrength":@(alarmInfo.brightness),
+        @"aromatherapyRate":@(alarmInfo.aromaRate),
+        @"oscillator":@(alarmInfo.shake ? 1 : 0),
+        @"musicId":@(alarmInfo.musicID),
+        @"timeStamp":@(timeStamp),
+    };
+    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"configAlarm----------------%@", responseObject);
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
             [weakSelf.tableView reloadData];
         }else{
-            alarmInfo.isOpen = YES;
+            alarmInfo.isOpen = NO;
         }
     }];
 }

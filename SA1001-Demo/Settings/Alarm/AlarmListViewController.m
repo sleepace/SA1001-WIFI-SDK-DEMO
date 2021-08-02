@@ -12,8 +12,8 @@
 #import "AlarmDataModel.h"
 #import "AlarmViewController.h"
 #import "TitleValueSwitchCellTableViewCell.h"
-#import <SA1001/SA1001.h>
-#import <SA1001/SALAlarmInfo.h>
+
+#import <SLPTCP/SA1001AlarmInfo.h>
 
 @interface AlarmListViewController ()<UITableViewDataSource, UITableViewDelegate, AlarmViewControllerDelegate>
 
@@ -41,16 +41,60 @@
 - (void)loadData
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName getAlarmListTimeout:0 completion:^(SLPDataTransferStatus status, id data) {
-        weakSelf.alramList = data;
-        if (self.alramList && self.alramList.count > 0) {
-            self.tableView.hidden = NO;
-            self.emptyView.hidden = YES;
-            [weakSelf.tableView reloadData];
-        }else{
-            self.tableView.hidden = YES;
-            self.emptyView.hidden = NO;
+    [SLPSharedHTTPManager getAlarmListWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    
+                    NSArray *alarms = dic[@"alarms"];
+                    NSMutableArray *alramList = [NSMutableArray array];
+                    if ([alarms isKindOfClass:[NSArray class]]) {
+                        NSInteger count = alarms.count;
+                        for (int i = 0; i < count; i++) {
+                            NSDictionary *alarmDic = [alarms objectAtIndex:i];
+                            
+                            if ([alarmDic isKindOfClass:[NSDictionary class]]) {
+                                SA1001AlarmInfo *info = [SA1001AlarmInfo new];
+                                info.alarmID = [alarmDic[@"alarmId"] longLongValue];
+                                info.isOpen = [alarmDic[@"alarmFlag"] boolValue];
+                                info.hour = [alarmDic[@"hour"] integerValue];
+                                info.minute = [alarmDic[@"min"] integerValue];
+                                info.flag = [alarmDic[@"week"] integerValue];
+                                info.snoozeLength = [alarmDic[@"lazyTime"] integerValue];
+                                info.snoozeTime = [alarmDic[@"lazyTimes"] integerValue];
+                                info.volume = [alarmDic[@"volum"] integerValue];
+                                info.brightness = [alarmDic[@"lightStrength"] integerValue];
+                                info.shake = [alarmDic[@"oscillator"] boolValue];
+                                info.musicID = [alarmDic[@"musicId"] integerValue];
+
+                                info.aromaRate = [alarmDic[@"aromatherapyRate"] integerValue];
+                                info.timestamp = [alarmDic[@"timeStamp"] intValue];
+                                info.smartFlag = [alarmDic[@"smartFlag"] intValue];
+                                info.smartOffset = [alarmDic[@"smartOffset"] intValue];
+
+                                [alramList addObject:info];
+                            }
+                        }
+                    }
+                    
+                    weakSelf.alramList = alramList;
+                    if (weakSelf.alramList && weakSelf.alramList.count > 0) {
+                        weakSelf.emptyView.hidden = YES;
+                        weakSelf.tableView.hidden = NO;
+                        [weakSelf.tableView reloadData];
+                    }else{
+                        weakSelf.emptyView.hidden = NO;
+                        weakSelf.tableView.hidden = YES;
+                    }
+                }
+            }
         }
+
     }];
 }
 
@@ -80,7 +124,7 @@
         return;
     }
     
-    SALAlarmInfo *alarmInfo = [self.alramList lastObject];
+    SA1001AlarmInfo *alarmInfo = [self.alramList lastObject];
     NSInteger alarmID = alarmInfo.alarmID + 1;
     
     AlarmViewController *vc = [AlarmViewController new];
@@ -100,7 +144,7 @@
 {
     TitleValueSwitchCellTableViewCell *cell = (TitleValueSwitchCellTableViewCell *)[SLPUtils tableView:tableView cellNibName:@"TitleValueSwitchCellTableViewCell"];
     
-    SALAlarmInfo *alarmData = [self.alramList objectAtIndex:indexPath.row];
+    SA1001AlarmInfo *alarmData = [self.alramList objectAtIndex:indexPath.row];
     cell.titleLabel.text = [self getAlarmTimeStringWithDataModle:alarmData];
     cell.subTitleLbl.text = [SLPWeekDay getAlarmRepeatDayStringWithWeekDay:alarmData.flag];
     cell.switcher.on = alarmData.isOpen;
@@ -117,11 +161,11 @@
     return cell;
 }
 
-- (void)turnOnAlarmWithAlarm:(SALAlarmInfo *)alarmInfo
+- (void)turnOnAlarmWithAlarm:(SA1001AlarmInfo *)alarmInfo
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName enableAlarm:alarmInfo.alarmID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             [weakSelf.tableView reloadData];
@@ -131,16 +175,11 @@
     }];
 }
 
-- (void)turnOffAlarmWithAlarm:(SALAlarmInfo *)alarmInfo
+- (void)turnOffAlarmWithAlarm:(SA1001AlarmInfo *)alarmInfo
 {
-    if (![SLPBLESharedManager blueToothIsOpen]) {
-        [self.tableView reloadData];
-        [Utils showMessage:LocalizedString(@"phone_bluetooth_not_open") controller:self];
-        return;
-    }
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName disableAlarm:alarmInfo.alarmID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             [weakSelf.tableView reloadData];
@@ -154,12 +193,12 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    SALAlarmInfo *alarmData = [self.alramList objectAtIndex:indexPath.row];
+    SA1001AlarmInfo *alarmData = [self.alramList objectAtIndex:indexPath.row];
     
     [self goAlarmVCWithAlarmData:alarmData];
 }
 
-- (void)goAlarmVCWithAlarmData:(SALAlarmInfo *)alarmData
+- (void)goAlarmVCWithAlarmData:(SA1001AlarmInfo *)alarmData
 {
     AlarmViewController *vc = [AlarmViewController new];
     vc.delegate = self;
@@ -173,7 +212,7 @@
     return 80;
 }
 
-- (NSString *)getAlarmTimeStringWithDataModle:(SALAlarmInfo *)dataModel {
+- (NSString *)getAlarmTimeStringWithDataModle:(SA1001AlarmInfo *)dataModel {
     return [SLPUtils timeStringFrom:dataModel.hour minute:dataModel.minute isTimeMode24:[SLPUtils isTimeMode24]];
 }
 

@@ -8,9 +8,9 @@
 
 #import "ControlLightViewController.h"
 
-#import <SA1001/SA1001.h>
-#import <SA1001/SALWorkStatus.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+
+#import <SLPTCP/SLPLTcpCommon.h>
+#import <SLPTCP/SA1001WorkMode.h>
 
 @interface ControlLightViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *colorRTextField;
@@ -79,11 +79,13 @@
 {
     [super viewWillAppear:animated];
     
-    self.colorRTextField.text = @"";
-    self.colorGTextfFiled.text = @"";
-    self.colorBTextFiled.text = @"";
+    self.colorRTextField.text = @"255";
+    self.colorGTextfFiled.text = @"104";
+    self.colorBTextFiled.text = @"11";
     self.colorWTextFiled.text = @"";
     self.brightnessTextFiled.text = @"";
+    
+    [self getWorkMode];
 }
 
 - (void)setUI
@@ -107,6 +109,28 @@
     self.sendBrightnessBtn.layer.cornerRadius = 5;
     self.openLightBtn.layer.masksToBounds = YES;
     self.openLightBtn.layer.cornerRadius = 5;
+}
+
+- (void)getWorkMode
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed) {
+            SA1001WorkMode *mode = (SA1001WorkMode *)data;
+            [weakSelf updateLigntBtn:mode.isLightOn];
+        }
+    }];
+}
+
+- (void)updateLigntBtn:(BOOL)lightOn
+{
+    if (!lightOn) {
+        self.openLightBtn.alpha = 0.3;
+        self.openLightBtn.userInteractionEnabled = NO;
+    } else {
+        self.openLightBtn.alpha = 1;
+        self.openLightBtn.userInteractionEnabled = YES;
+    }
 }
 
 - (IBAction)sendColorAction:(UIButton *)sender {
@@ -150,14 +174,16 @@
         ligtht.b = b;
         ligtht.w = w;
         
-        if (![SLPLanTCPCommon isReachableViaWiFi]) {
+        if (![SLPLTcpCommon isReachableViaWiFi]) {
             [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
             return;
         }
         __weak typeof(self) weakSelf = self;
-        [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnColorLight:ligtht brightness:brightness timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOnColorLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+            } else {
+                [weakSelf updateLigntBtn:YES];
             }
         }];
     }else{
@@ -178,30 +204,30 @@
         return;
     }
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName lightBrightness:brightness timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salLightBrightness:brightness deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }
     }];
 }
 
-
-
 - (IBAction)openLightAction:(UIButton *)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffLightTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        } else {
+            [weakSelf updateLigntBtn:NO];
         }
     }];
 }

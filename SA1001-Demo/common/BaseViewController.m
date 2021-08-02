@@ -8,7 +8,7 @@
 
 #import "BaseViewController.h"
 #import "SLPLoadingBlockView.h"
-#import <SA1001/SA1001.h>
+
 
 
 @interface BaseViewController ()<UIGestureRecognizerDelegate>
@@ -57,11 +57,6 @@
 }
 
 - (BOOL)checkAndShowAlertWithConnectStatus {
-    if (![SLPBLESharedManager blueToothIsOpen]) {
-        [Utils showAlertTitle:nil message:LocalizedString(@"phone_bluetooth_not_open") confirmTitle:LocalizedString(@"confirm") atViewController:self];
-        return NO;
-    }
-    
     if (!SharedDataManager.connected) {
         [Utils showAlertTitle:nil message:LocalizedString(@"device_w_ble_connect_failed_tip") confirmTitle:LocalizedString(@"confirm") atViewController:self];
         return NO;

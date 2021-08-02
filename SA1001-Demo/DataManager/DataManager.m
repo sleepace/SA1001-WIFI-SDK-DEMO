@@ -25,14 +25,36 @@
         _selectItemsNum = 7;
         _assistMusicID = 31038;
         
-        _aidInfo = [[SALAidInfo alloc] init];
-        _aidInfo.aidStopDuration = 1;
+        _aidInfo = [[SA1001AidInfo alloc] init];
+        _aidInfo.aidStopDuration = 45;
         _aidInfo.r = 255;
-        _aidInfo.b = 0;
+        _aidInfo.b = 120;
         _aidInfo.w = 0;
         _aidInfo.brightness = 0;
         _aidInfo.aromaRate = 2;
-        _volumn = 0;
+        _volumn = 10;
+        
+        _deviceName = @"";
+        _token = @"";
+        _channelID = @"";
+        _plat = @"";
+        _ip = @"";
+        
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"deviceName"]) {
+            _deviceName = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceName"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"token"]) {
+            _token = [[NSUserDefaults standardUserDefaults] valueForKey:@"token"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"plat"]) {
+            _plat = [[NSUserDefaults standardUserDefaults] valueForKey:@"plat"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"channelID"]) {
+            _channelID = [[NSUserDefaults standardUserDefaults] valueForKey:@"channelID"];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"ip"]) {
+            _ip = [[NSUserDefaults standardUserDefaults] valueForKey:@"ip"];
+        }
     }
     
     return self;
@@ -43,13 +65,13 @@
     _selectItemsNum = 7;
     _assistMusicID = 31038;
     
-    _aidInfo.aidStopDuration = 1;
+    _aidInfo.aidStopDuration = 45;
     _aidInfo.r = 255;
-    _aidInfo.b = 0;
+    _aidInfo.b = 120;
     _aidInfo.w = 0;
     _aidInfo.brightness = 0;
     _aidInfo.aromaRate = 2;
-    _volumn = 0;
+    _volumn = 10;
 }
 
 - (void)toInit {

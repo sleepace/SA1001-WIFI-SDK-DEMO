@@ -18,11 +18,12 @@
 #import "WeekdaySelectViewController.h"
 #import "MusicListViewController.h"
 #import "TitleSubTitleArrowCell.h"
+#import "SLPLabelCell.h"
 #import "MusicInfo.h"
 #import "TimePickerSelectView.h"
 
-#import <SA1001/SA1001.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SA1001AlarmInfo.h>
+#import <SLPTCP/SLPLTcpCommon.h>
 
 static NSString *const kSection_SetDeviceInfo = @"kSection_SetDeviceInfo";
 
@@ -32,8 +33,9 @@ static NSString *const kRowMusic = @"kRowMusic";
 static NSString *const kRowMusicVolumn = @"kRowMusicVolumn";
 static NSString *const kRowLightWake = @"kRowLightWake";
 static NSString *const kRowAromaWake = @"kRowAromaWake";
-//static NSString *const kRowSmartWake = @"kRowSmartWake";
-//static NSString *const kRowWakeTime = @"kRowWakeTime";
+static NSString *const kRowSmartWake = @"kRowSmartWake";
+static NSString *const kRowWakeTime = @"kRowWakeTime";
+static NSString *const kRowSmartWakeTip = @"kRowSmartWakeTip";
 
 static NSString *const kRowSnooze = @"kRowSnooze";
 static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
@@ -53,7 +55,7 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 @property (nonatomic, strong) NSMutableArray *musicList;
 
-@property (strong, nonatomic) SALAlarmInfo *alarmDataNew;
+@property (strong, nonatomic) SA1001AlarmInfo *alarmDataNew;
 
 @end
 
@@ -123,11 +125,16 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     [self createFooterList];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void)setUI
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(15, 0, self.view.frame.size.width - 30, 0.001)];
     self.tableView.tableHeaderView = view;
-    self.alarmDataNew = [[SALAlarmInfo alloc] init];
+    self.alarmDataNew = [[SA1001AlarmInfo alloc] init];
     if (self.alarmPageType == AlarmPageType_Add) {
         self.titleLabel.text = LocalizedString(@"add_alarm");
         
@@ -156,6 +163,8 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     self.alarmDataNew.musicID = self.orignalAlarmData.musicID;
     self.alarmDataNew.aromaRate = self.orignalAlarmData.aromaRate;
     self.alarmDataNew.timestamp = [[NSDate date] timeIntervalSince1970];
+    self.alarmDataNew.smartFlag = self.orignalAlarmData.smartFlag;
+    self.alarmDataNew.smartOffset = self.orignalAlarmData.smartOffset;
 }
 
 - (void)initDefaultAlarmData
@@ -173,6 +182,8 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     self.alarmDataNew.musicID = 31051;
     self.alarmDataNew.aromaRate = 2;
     self.alarmDataNew.timestamp = [[NSDate date] timeIntervalSince1970];
+    self.alarmDataNew.smartFlag = 0;
+    self.alarmDataNew.smartOffset = 20;
 }
 
 - (void)loadSectionData
@@ -181,7 +192,13 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     
     SLPTableSectionData *sectionData1 = [[SLPTableSectionData alloc] init];
     sectionData1.sectionEnum = kSection_SetDeviceInfo;
-    NSMutableArray *rowEnumList1 = [NSMutableArray arrayWithObjects:kRowTime, kRowRepeat, kRowMusic, kRowMusicVolumn, kRowLightWake, kRowAromaWake, kRowSnooze, nil];
+    NSMutableArray *rowEnumList1 = [NSMutableArray arrayWithObjects:kRowTime, kRowRepeat, kRowMusic, kRowMusicVolumn, kRowLightWake, kRowAromaWake, kRowSmartWake, nil];
+    if (self.alarmDataNew.smartFlag) {
+        [rowEnumList1 addObject:kRowWakeTime];
+        [rowEnumList1 addObject:kRowSmartWakeTip];
+    }
+    [rowEnumList1 addObject:kRowSnooze];
+
     if (self.alarmDataNew.snoozeTime) {
         [rowEnumList1 addObject:kRowSnoozeTime];
     }
@@ -267,6 +284,12 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    SLPTableSectionData *sectionData = [self.sectionDataList objectAtIndex:indexPath.section];
+    NSString *rowName = [sectionData .rowEnumList objectAtIndex:indexPath.row];
+    
+    if ([rowName isEqualToString:kRowSmartWakeTip]) {
+        return 100;
+    }
     return 60;
 }
 
@@ -311,6 +334,8 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         [self showSnoozeTimeSelector];
     }else if ([rowName isEqualToString:kRowMusicVolumn]){
         [self showVolumeSelector];
+    }else if ([rowName isEqualToString:kRowWakeTime]){
+        [self showWakeTimeSelector];
     }
 }
 
@@ -376,6 +401,19 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)showWakeTimeSelector
+{
+    NSMutableArray *values = [NSMutableArray array];
+    for (int i = 1; i <= 30; i++) {
+        [values addObject:@(i)];
+    }
+    SLPMinuteSelectView *minuteSelectView = [SLPMinuteSelectView minuteSelectViewWithValues:values];
+    __weak typeof(self) weakSelf = self;
+    [minuteSelectView showInView:self.view mode:SLPMinutePickerMode_Minute time:self.alarmDataNew.smartOffset finishHandle:^(NSInteger timeValue) {
+        weakSelf.alarmDataNew.smartOffset = timeValue;
+        [weakSelf.tableView reloadData];
+    } cancelHandle:nil];
+}
 
 - (void)showSnoozeTimeSelector
 {
@@ -398,25 +436,29 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         TitleSubTitleArrowCell *baseCell = (TitleSubTitleArrowCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSubTitleArrowCell"];
         baseCell.titleLabel.text = LocalizedString(@"time");
         baseCell.subTitleLabel.text = [self getAlarmTimeStringWithDataModle:self.alarmDataNew];
-        [Utils configCellTitleLabel:baseCell.textLabel];
+        [Utils configCellTitleLabel:baseCell.titleLabel];
+        [Utils configCellTitleLabel:baseCell.subTitleLabel];
         cell = baseCell;
     }else if ([rowName isEqualToString:kRowRepeat]){
         TitleSubTitleArrowCell *baseCell = (TitleSubTitleArrowCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSubTitleArrowCell"];
         baseCell.titleLabel.text = LocalizedString(@"reply");
         baseCell.subTitleLabel.text = [SLPWeekDay getAlarmRepeatDayStringWithWeekDay:self.alarmDataNew.flag];
-        [Utils configCellTitleLabel:baseCell.textLabel];
+        [Utils configCellTitleLabel:baseCell.titleLabel];
+        [Utils configCellTitleLabel:baseCell.subTitleLabel];
         cell = baseCell;
     }else if ([rowName isEqualToString:kRowMusic]){
         TitleSubTitleArrowCell *baseCell = (TitleSubTitleArrowCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSubTitleArrowCell"];
         baseCell.titleLabel.text = LocalizedString(@"music");
         baseCell.subTitleLabel.text = [self getMusicNameWithMusicID:self.alarmDataNew.musicID];
-        [Utils configCellTitleLabel:baseCell.textLabel];
+        [Utils configCellTitleLabel:baseCell.titleLabel];
+        [Utils configCellTitleLabel:baseCell.subTitleLabel];
         cell = baseCell;
     }else if([rowName isEqualToString:kRowMusicVolumn]){
         TitleSubTitleArrowCell *baseCell = (TitleSubTitleArrowCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSubTitleArrowCell"];
         baseCell.titleLabel.text = LocalizedString(@"volume");
         baseCell.subTitleLabel.text = [NSString stringWithFormat:@"%d", self.alarmDataNew.volume];
-        [Utils configCellTitleLabel:baseCell.textLabel];
+        [Utils configCellTitleLabel:baseCell.titleLabel];
+        [Utils configCellTitleLabel:baseCell.subTitleLabel];
         cell = baseCell;
     }else if ([rowName isEqualToString:kRowLightWake]){
         TitleSwitchCell *sCell = (TitleSwitchCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSwitchCell"];
@@ -444,6 +486,30 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         };
         [Utils configCellTitleLabel:sCell.titleLabel];
         cell = sCell;
+    }else if ([rowName isEqualToString:kRowSmartWake]){
+        TitleSwitchCell *sCell = (TitleSwitchCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSwitchCell"];
+        sCell.titleLabel.text = LocalizedString(@"smart_wake");
+        sCell.switcher.on = self.alarmDataNew.smartFlag;
+        sCell.switchBlock = ^(UISwitch *sender) {
+            weakSelf.alarmDataNew.smartFlag = sender.on ? 1 : 0;
+            [weakSelf createFooterList];
+            [weakSelf loadSectionData];
+            [weakSelf.tableView reloadData];
+        };
+        [Utils configCellTitleLabel:sCell.titleLabel];
+        cell = sCell;
+    }else if ([rowName isEqualToString:kRowWakeTime]){
+        TitleSubTitleArrowCell *baseCell = (TitleSubTitleArrowCell *)[SLPUtils tableView:self.tableView cellNibName:@"TitleSubTitleArrowCell"];
+        baseCell.titleLabel.text = LocalizedString(@"wake_time");
+        NSString *timeStr = [NSString stringWithFormat:@"%d%@", self.alarmDataNew.smartOffset, LocalizedString(@"min")];
+        baseCell.subTitleLabel.text = timeStr;
+        [Utils configCellTitleLabel:baseCell.titleLabel];
+        [Utils configCellTitleLabel:baseCell.subTitleLabel];
+        cell = baseCell;
+    } else if ([rowName isEqualToString:kRowSmartWakeTip]){
+        SLPLabelCell *labelCell = (SLPLabelCell *)[SLPUtils tableView:self.tableView cellNibName:@"SLPLabelCell"];
+        [SLPUtils setLableNormalAttributes:labelCell.titleLabel text:LocalizedString(@"wake_time_turn_on") font:[Theme T4]];
+        cell = labelCell;
     }
 
     else if ([rowName isEqualToString:kRowSnooze]){
@@ -465,7 +531,8 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
         baseCell.titleLabel.text = LocalizedString(@"snooze_duration");
         NSString *timeStr = [NSString stringWithFormat:@"%d%@", self.alarmDataNew.snoozeLength, LocalizedString(@"min")];
         baseCell.subTitleLabel.text = timeStr;
-        [Utils configCellTitleLabel:baseCell.textLabel];
+        [Utils configCellTitleLabel:baseCell.titleLabel];
+        [Utils configCellTitleLabel:baseCell.subTitleLabel];
         cell = baseCell;
     }
     
@@ -485,22 +552,42 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     return musicName;
 }
 
-- (NSString *)getAlarmTimeStringWithDataModle:(SALAlarmInfo *)dataModel {
+- (NSString *)getAlarmTimeStringWithDataModle:(SA1001AlarmInfo *)dataModel {
     return [SLPUtils timeStringFrom:dataModel.hour minute:dataModel.minute isTimeMode24:[SLPUtils isTimeMode24]];
 }
 
 - (IBAction)saveAction:(UIButton *)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     
+    NSInteger timeStamp = [[NSDate date] timeIntervalSince1970];
+    
     [self showLoadingView];
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName alarmConfig:self.alarmDataNew timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    NSDictionary *par = @{
+        @"alarmId":@(self.alarmDataNew.alarmID),
+        @"alarmFlag" : @(self.alarmDataNew.isOpen ? 1 : 0),
+        @"smartFlag":@(self.alarmDataNew.smartFlag),
+        @"smartOffset":@(self.alarmDataNew.smartOffset),
+        @"hour":@(self.alarmDataNew.hour),
+        @"min":@(self.alarmDataNew.minute),
+        @"week":@(self.alarmDataNew.flag),
+        @"lazyTime":@(self.alarmDataNew.snoozeLength),
+        @"lazyTimes":@(self.alarmDataNew.snoozeTime),
+        @"volum":@(self.alarmDataNew.volume),
+        @"lightStrength":@(self.alarmDataNew.brightness),
+        @"aromatherapyRate":@(self.alarmDataNew.aromaRate),
+        @"oscillator":@(self.alarmDataNew.shake ? 1 : 0),
+        @"musicId":@(self.alarmDataNew.musicID),
+        @"timeStamp":@(timeStamp),
+    };
+    [SLPSharedHTTPManager configAlarmInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"configAlarm----------------%@", responseObject);
         [weakSelf unshowLoadingView];
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
             if ([weakSelf.delegate respondsToSelector:@selector(editAlarmInfoAndShouldReload)]) {
                 [weakSelf.delegate editAlarmInfoAndShouldReload];
@@ -517,17 +604,16 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
     }else{
         [self stopPreView];
     }
-    
 }
 
 - (void)startPreView
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName startAlarmRreviewVolume:self.alarmDataNew.volume brightness:self.alarmDataNew.brightness aromaRate:self.alarmDataNew.aromaRate musicID:self.alarmDataNew.musicID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salStartAlarmRreviewVolume:self.alarmDataNew.volume brightness:self.alarmDataNew.brightness aromaRate:self.alarmDataNew.aromaRate musicID:self.alarmDataNew.musicID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -538,12 +624,12 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 - (void)stopPreView
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName stopAlarmRreviewTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salStopAlarmRreviewWithDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -554,14 +640,14 @@ static NSString *const kRowSnoozeTime = @"kRowSnoozeTime";
 
 -(void)deleteBtnTapped
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName delAlarm:self.alarmDataNew.alarmID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    [SLPSharedHTTPManager deleteAlarmWithAlarmID:self.alarmDataNew.alarmID deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
             if ([self.delegate respondsToSelector:@selector(editAlarmInfoAndShouldReload)]) {
                 [self.delegate editAlarmInfoAndShouldReload];

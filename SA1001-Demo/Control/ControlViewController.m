@@ -12,7 +12,7 @@
 #import "ControlLightViewController.h"
 #import "ControlAromaViewController.h"
 #import "ControlSleepAidViewController.h"
-#import <SA1001/SA1001.h>
+
 
 @interface ControlViewController ()
 
@@ -53,23 +53,23 @@
 {
     [super viewWillAppear:animated];
     
-    [self showConnected:SharedDataManager.connected];
+//    [self showConnected:SharedDataManager.connected];
 }
 
 - (void)addNotificationObservre {
     NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
-    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameWLANDeviceConnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameWLANDeviceDisconnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameLTCPConnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
 }
 
 - (void)deviceConnected:(NSNotification *)notification {
     SharedDataManager.connected = YES;
-    [self showConnected:YES];
+//    [self showConnected:YES];
 }
 
 - (void)deviceDisconnected:(NSNotification *)notfication {
     SharedDataManager.connected = NO;
-    [self showConnected:NO];
+//    [self showConnected:NO];
 }
 
 - (void)setUI

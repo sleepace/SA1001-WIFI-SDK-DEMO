@@ -12,8 +12,8 @@
 #import "SLPTimingDataModel.h"
 
 #import "AromaTimeViewController.h"
-#import <SA1001/SA1001.h>
-#import <SA1001/SALTimeAromaInfo.h>
+
+#import <SLPTCP/SA1001TimeAromaInfo.h>
 
 @interface AromaTimeListViewController ()<UITableViewDelegate, UITableViewDataSource, AromaTimeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
@@ -38,16 +38,47 @@
 - (void)loadData
 {
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName getTimeAromaTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        NSArray *timeList = data;
-        self.aromaTimeList = timeList;
-        if (self.aromaTimeList && self.aromaTimeList.count > 0) {
-            self.emptyView.hidden = YES;
-            self.tableView.hidden = NO;
-            [weakSelf.tableView reloadData];
-        }else{
-            self.emptyView.hidden = NO;
-            self.tableView.hidden = YES;
+    [SLPSharedHTTPManager getTimeAromaListWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    
+                    NSArray *aromatherapyList = dic[@"aromatherapyList"];
+                    NSMutableArray *timeList = [NSMutableArray array];
+                    if ([aromatherapyList isKindOfClass:[NSArray class]]) {
+                        NSInteger count = aromatherapyList.count;
+                        for (int i = 0; i < count; i++) {
+                            NSDictionary *aromaDic = [aromatherapyList objectAtIndex:i];
+                            
+                            SA1001TimeAromaInfo *info = [SA1001TimeAromaInfo new];
+                            info.ID = [aromaDic[@"aromatherapyId"] longLongValue];
+                            info.flag = [aromaDic[@"week"] integerValue];
+                            info.enable = [aromaDic[@"aromatherapyFlag"] boolValue];
+                            info.duration = [aromaDic[@"timeRange"] integerValue];
+                            info.rate = [aromaDic[@"rate"] integerValue];
+                            info.hour = [aromaDic[@"hour"] integerValue];
+                            info.minute = [aromaDic[@"min"] integerValue];
+
+                            [timeList addObject:info];
+                        }
+                    }
+                    
+                    weakSelf.aromaTimeList = timeList;
+                    if (weakSelf.aromaTimeList && weakSelf.aromaTimeList.count > 0) {
+                        weakSelf.emptyView.hidden = YES;
+                        weakSelf.tableView.hidden = NO;
+                        [weakSelf.tableView reloadData];
+                    }else{
+                        weakSelf.emptyView.hidden = NO;
+                        weakSelf.tableView.hidden = YES;
+                    }
+                }
+            }
         }
     }];
 }
@@ -76,7 +107,7 @@
         return;
     }
     
-    SALTimeAromaInfo *aromaInfo = [self.aromaTimeList lastObject];
+    SA1001TimeAromaInfo *aromaInfo = [self.aromaTimeList lastObject];
     NSInteger ID = aromaInfo.ID + 1;
     
     AromaTimeViewController *vc = [AromaTimeViewController new];
@@ -96,7 +127,7 @@
 {
     TitleValueSwitchCellTableViewCell *cell = (TitleValueSwitchCellTableViewCell *)[SLPUtils tableView:tableView cellNibName:@"TitleValueSwitchCellTableViewCell"];
     
-    SALTimeAromaInfo *timeData = [self.aromaTimeList objectAtIndex:indexPath.row];
+    SA1001TimeAromaInfo *timeData = [self.aromaTimeList objectAtIndex:indexPath.row];
     cell.titleLabel.text = [SLPUtils timeStringFrom:timeData.hour minute:timeData.minute isTimeMode24:[SLPUtils isTimeMode24]];
     
     NSInteger hour = timeData.duration / 60;
@@ -120,20 +151,14 @@
     return cell;
 }
 
-- (void)turnTimeInfoWithTimeInfo:(SALTimeAromaInfo *)timeInfo isOpen:(BOOL)isOpen
+- (void)turnTimeInfoWithTimeInfo:(SA1001TimeAromaInfo *)timeInfo isOpen:(BOOL)isOpen
 {
     BOOL oriEnable = timeInfo.enable;
     
     timeInfo.enable = isOpen;
     
-    if (![SLPBLESharedManager blueToothIsOpen]) {
-        timeInfo.enable = oriEnable;
-        [self.tableView reloadData];
-        [Utils showMessage:LocalizedString(@"phone_bluetooth_not_open") controller:self];
-        return;
-    }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName editeTimeAromaList:self.aromaTimeList timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salEditeTimeAromaList:self.aromaTimeList deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             timeInfo.enable = oriEnable;
@@ -152,11 +177,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    SALTimeAromaInfo *timeData = [self.aromaTimeList objectAtIndex:indexPath.row];
+    SA1001TimeAromaInfo *timeData = [self.aromaTimeList objectAtIndex:indexPath.row];
     [self goAromeTimePageWith:timeData];
 }
 
-- (void)goAromeTimePageWith:(SALTimeAromaInfo *)timeData
+- (void)goAromeTimePageWith:(SA1001TimeAromaInfo *)timeData
 {
     SLPTimingDataModel *dataModel = [[SLPTimingDataModel alloc] init];
     dataModel.hour = timeData.hour;

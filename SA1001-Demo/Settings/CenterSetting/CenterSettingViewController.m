@@ -9,8 +9,8 @@
 #import "CenterSettingViewController.h"
 
 #import "SelectItemCell.h"
-#import <SA1001/SA1001.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+
+#import <SLPTCP/SLPLTcpCommon.h>
 
 @interface CenterSettingViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -49,20 +49,25 @@
     offset = 0x01 << 2;
     BOOL aromaEnable = self.selectItemsNumNew & offset;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setCenterKey:lightEnable musicEnable:musicEnable aromaEnable:aromaEnable timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    NSDictionary *par = @{
+        @"light":(lightEnable ? @"1" : @"0"),
+        @"music" : (musicEnable ? @"1" : @"0"),
+        @"aromatherapy":(aromaEnable ? @"1" : @"0")
+    };
+    [SLPSharedHTTPManager configCenterKeyWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"configCenterKey----------------%@", responseObject);
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
-//            SharedDataManager.selectItemsNum = self.selectItemsNumNew;
+            SharedDataManager.selectItemsNum = self.selectItemsNumNew;
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }
     }];
-    
 }
 
 - (NSArray *)getSelectItems:(NSInteger)selectItemsNum

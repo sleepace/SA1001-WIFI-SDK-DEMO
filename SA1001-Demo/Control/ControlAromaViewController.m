@@ -8,9 +8,9 @@
 
 #import "ControlAromaViewController.h"
 
-#import <SA1001/SA1001.h>
+
 #import "CustomColorButton.h"
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SLPLTcpCommon.h>
 
 
 @interface ControlAromaViewController ()
@@ -45,8 +45,8 @@
 - (void)addNotificationObservre {
     NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
     
-    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameWLANDeviceConnected object:nil];
-    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameWLANDeviceDisconnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceConnected:) name:kNotificationNameLTCPConnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(deviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
 }
 
 - (void)deviceConnected:(NSNotification *)notification
@@ -76,8 +76,30 @@
     [super viewWillAppear:animated];
     
     [self reset];
+    [self getWorkMode];
 }
 
+- (void)getWorkMode
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed) {
+            SA1001WorkMode *mode = (SA1001WorkMode *)data;
+            [weakSelf updateAromaBtn:(mode.aromaRate != 0)];
+        }
+    }];
+}
+
+- (void)updateAromaBtn:(BOOL)aromOn
+{
+    if (!aromOn) {
+        self.openAroma.alpha = 0.3;
+        self.openAroma.userInteractionEnabled = NO;
+    } else {
+        self.openAroma.alpha = 1;
+        self.openAroma.userInteractionEnabled = YES;
+    }
+}
 - (void)setUI
 {
     [self.fastBtn setTitle:LocalizedString(@"fast") forState:UIControlStateNormal];
@@ -149,14 +171,16 @@
 
 - (void)setAromaRateWith:(UInt8)rate
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setAroma:rate timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetAroma:rate deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        } else {
+            [weakSelf updateAromaBtn:(rate != 0)];
         }
     }];
 }

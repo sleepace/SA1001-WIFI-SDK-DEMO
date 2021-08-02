@@ -10,8 +10,7 @@
 
 #import "SelectItemCell.h"
 #import "MusicInfo.h"
-#import <SA1001/SA1001.h>
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SLPLTcpCommon.h>
 
 @interface MusicListViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -76,15 +75,19 @@
 
 - (void)playMusic:(NSInteger)musicID
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     if (self.mode == FromMode_Alarm) {
-        [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnMusic:musicID volume:12 playMode:2 timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOnMusic:musicID volume:12 playMode:2 deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+            }else{
+                if (weakSelf.musicBlock) {
+                    weakSelf.musicBlock(weakSelf.musicID);
+                }
             }
         }];
     }
@@ -104,11 +107,11 @@
 {
     __weak typeof(self) weakSelf = self;
     if (self.mode == FromMode_Alarm) {
-        if (![SLPLanTCPCommon isReachableViaWiFi]) {
+        if (![SLPLTcpCommon isReachableViaWiFi]) {
             [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
             return;
         }
-        [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffMusicTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        [SLPSharedLTcpManager salTurnOffMusicDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
             if (status != SLPDataTransferStatus_Succeed) {
                 [Utils showDeviceOperationFailed:status atViewController:weakSelf];
             }else{

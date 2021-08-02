@@ -8,12 +8,13 @@
 
 #import "ControlSleepAidViewController.h"
 
-#import <SA1001/SA1001.h>
+
 #import "MusicListViewController.h"
 #import "MusicInfo.h"
 #import "SLPMinuteSelectView.h"
 #import "CustomColorButton.h"
-#import <SLPMLan/SLPLanTCPCommon.h>
+#import <SLPTCP/SLPLTcpCommon.h>
+#import <SLPTCP/SA1001AidInfo.h>
 
 @interface ControlSleepAidViewController ()<UIScrollViewDelegate>
 
@@ -192,12 +193,13 @@
 {
     [super viewWillAppear:animated];
     
-    self.colorGTextfFiled.text = @"";
     self.brightnessTextFiled.text = @"";
     self.volTextField.text = @"";
     
-    self.currentAromaBtn.selected = NO;
-//    [self setUI];
+//    self.currentAromaBtn.selected = NO;
+    
+    [self getWorkMode];
+    [self getSleepAidInfo];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledEditChanged:)name:UITextFieldTextDidChangeNotification object:nil];
 }
@@ -356,6 +358,91 @@
     [self.saveBtn setTitle:LocalizedString(@"save") forState:UIControlStateNormal];
     self.saveBtn.layer.masksToBounds = YES;
     self.saveBtn.layer.cornerRadius = 5;
+    
+    self.currentAromaBtn.selected = NO;
+    switch (SharedDataManager.aidInfo.aromaRate) {
+        case 1:
+            self.slowBtn.selected = YES;
+            self.currentAromaBtn = self.slowBtn;
+            break;
+        case 2:
+            self.midBtn.selected = YES;
+            self.currentAromaBtn = self.midBtn;
+            break;
+        case 3:
+            self.fastBtn.selected = YES;
+            self.currentAromaBtn = self.fastBtn;
+            break;
+        default:
+            self.openAroma.selected = YES;
+            self.currentAromaBtn = self.openAroma;
+            break;
+    }
+}
+
+- (void)getWorkMode
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedLTcpManager salGetWorkStatusDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        if (status == SLPDataTransferStatus_Succeed) {
+            SA1001WorkMode *mode = (SA1001WorkMode *)data;
+            [weakSelf updateLigntBtn:mode.isLightOn];
+            [weakSelf updatePlayBtn:(mode.musicStatus == 1)];
+        }
+    }];
+}
+
+- (void)updateLigntBtn:(BOOL)lightOn
+{
+    if (!lightOn) {
+        self.openLightBtn.alpha = 0.3;
+        self.openLightBtn.userInteractionEnabled = NO;
+    } else {
+        self.openLightBtn.alpha = 1;
+        self.openLightBtn.userInteractionEnabled = YES;
+    }
+}
+
+- (void)updatePlayBtn:(BOOL)play
+{
+    self.stopMusicBtn.selected = play;
+    self.isPlayingMusic = play;
+    
+    NSString *title = play ? LocalizedString(@"pause") : LocalizedString(@"play");
+    [self.stopMusicBtn setTitle:title forState:UIControlStateNormal];
+}
+
+- (void)getSleepAidInfo
+{
+    __weak typeof(self) weakSelf = self;
+    [SLPSharedHTTPManager getAidInfoWithDeviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeOut:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        NSLog(@"getAIdInfo----------------%@", responseObject);
+        if (result) {
+            NSDictionary *data = responseObject[@"data"];
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSString *configJson = data[@"configJson"];
+                if (configJson) {
+                    NSData *jsonData = [configJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                    NSLog(@"getDic----------------%@", dic);
+                    
+                    NSArray *array = dic[@"scenes"];
+                    if ([array isKindOfClass:[NSArray class]]) {
+                        NSDictionary *aidDic = [dic[@"scenes"] firstObject];
+                        NSLog(@"getAIdInfo----------------%@", aidDic);
+
+                        SharedDataManager.aidInfo.brightness = [aidDic[@"brightness"] intValue];
+                        SharedDataManager.aidInfo.g = [aidDic[@"colorG"] intValue];
+                        SharedDataManager.aidInfo.aromaRate = [aidDic[@"aromatherapyRate"] intValue];
+                        SharedDataManager.aidInfo.aidStopDuration = [aidDic[@"aidTimeRange"] intValue];
+                        
+                        [weakSelf setUI];
+                    }
+                }
+            }
+        }
+    }];
 }
 
 - (NSString *)getMusicNameWithMusicID:(NSInteger)musicID
@@ -385,13 +472,13 @@
     
     UInt8 vol = volume;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setSleepAidMusicVolume:vol timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetSleepAidMusicVolume:vol deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -402,7 +489,7 @@
 
 - (IBAction)playMusic:(UIButton *)sender {
     __weak typeof(self) weakSelf = self;
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
@@ -432,17 +519,16 @@
 
 - (void)playMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }
     }];
-    
 }
 
 - (void)stopMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffSleepAidMusic:SharedDataManager.assistMusicID callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffSleepAidMusicDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }
@@ -488,13 +574,14 @@
     ligtht.b = b;
     ligtht.w = w;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOnSleepAidLight:ligtht brightness:brightness timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOnSleepAidLight:ligtht brightness:brightness deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status == SLPDataTransferStatus_Succeed) {
+            [weakSelf updateLigntBtn:YES];
         }else{
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }
@@ -517,14 +604,16 @@
 }
 
 - (IBAction)openLightAction:(UIButton *)sender {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName turnOffLightTimeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salTurnOffLightDeviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+        } else {
+            [weakSelf updateLigntBtn:NO];
         }
     }];
 }
@@ -567,12 +656,12 @@
 
 - (void)setAromaRateWith:(UInt8)rate
 {
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName setAssistAroma:rate timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    [SLPSharedLTcpManager salSetAssistAroma:rate deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (status != SLPDataTransferStatus_Succeed) {
             [Utils showDeviceOperationFailed:status atViewController:weakSelf];
         }else{
@@ -633,7 +722,7 @@
 //        return;
 //    }
     
-    SALAidInfo *aidInfo = [[SALAidInfo alloc] init];
+    SA1001AidInfo *aidInfo = [[SA1001AidInfo alloc] init];
     aidInfo.r = r;
     aidInfo.g = g;
     aidInfo.b = b;
@@ -641,18 +730,40 @@
     aidInfo.brightness = brightness;
     aidInfo.aromaRate = SharedDataManager.aidInfo.aromaRate;
     aidInfo.aidStopDuration = SharedDataManager.aidInfo.aidStopDuration;
-    aidInfo.volume = 12;
+    aidInfo.volume = SharedDataManager.volumn;
     
-    if (![SLPLanTCPCommon isReachableViaWiFi]) {
+    if (![SLPLTcpCommon isReachableViaWiFi]) {
         [Utils showMessage:LocalizedString(@"wifi_not_connected") controller:self];
         return;
     }
+    
+    NSDictionary *par = @{
+        @"sceneId":@"100",
+        @"sceneFlag" : @"1",
+        @"sceneType":@"0",
+        @"monitorFlag":@"0",
+        @"monitorType":@"0",
+        @"monitorDeviceId":@"0000000000000",
+        @"aidFlag":@"1",
+        @"masterFlag":@"1",
+        @"defaultFlag":@"7",
+        @"volum":@(aidInfo.volume),
+        @"brightness":@(aidInfo.brightness),
+        @"colorR":@(aidInfo.r),
+        @"colorG":@(aidInfo.g),
+        @"colorB":@(aidInfo.b),
+        @"colorW":@(aidInfo.w),
+        @"aromatherapyRate":@(aidInfo.aromaRate),
+        @"smartFlag":@"0",
+        @"aidTimeRange":@(aidInfo.aidStopDuration),
+        @"smartWakeUp":@"0",
+    };
     __weak typeof(self) weakSelf = self;
-    [SLPSharedMLanManager sal:SharedDataManager.deviceName sleepAidConfig:aidInfo timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+    [SLPSharedHTTPManager configAidInfoWithParameters:par deviceInfo:SharedDataManager.deviceID deviceType:SLPDeviceType_Sal timeout:0 completion:^(BOOL result, id  _Nonnull responseObject, NSString * _Nonnull error) {
+        if (!result) {
+            [Utils showDeviceOperationFailed:SLPDataTransferStatus_Failed atViewController:weakSelf];
         }else{
-//            SharedDataManager.aidInfo = aidInfo;
+            SharedDataManager.aidInfo = aidInfo;
             [Utils showMessage:LocalizedString(@"save_succeed") controller:weakSelf];
         }
     }];
@@ -661,7 +772,7 @@
 - (void)showTimeSelector
 {
     NSMutableArray *values = [NSMutableArray array];
-    for (int i = 1; i <= 45; i++) {
+    for (int i = 1; i <= 60; i++) {
         [values addObject:@(i)];
     }
     SLPMinuteSelectView *minuteSelectView = [SLPMinuteSelectView minuteSelectViewWithValues:values];

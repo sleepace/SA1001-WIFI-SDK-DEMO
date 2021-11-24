@@ -519,7 +519,8 @@
 
 - (void)playMusicWitCompletion:(void(^)(SLPDataTransferStatus status))completion
 {
-    [SLPSharedLTcpManager salTurnOnsleepAidMusic:SharedDataManager.assistMusicID volume:SharedDataManager.volumn playMode:2 deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+    NSLog(@"ppp---%ld--%ld---%@",(long)SharedDataManager.assistMusicID,(long)SharedDataManager.volumn,SharedDataManager.deviceID);
+    [SLPSharedLTcpManager salTurnOnsleepAidMusic:SharedDataManager.assistMusicID volume:16 playMode:2 deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
         if (completion) {
             completion(status);
         }

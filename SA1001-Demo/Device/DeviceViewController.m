@@ -65,7 +65,9 @@
     if (SharedDataManager.ip.length > 0) {
         self.ipTextField.text = SharedDataManager.ip;
     }
-    self.deviceIDTextField.text = @"pfsn0pn95cf51";
+//    SA11166000005  @"SA11166000005"
+//    SA11179000257  @"ncew4y78xcg21"
+    self.deviceIDTextField.text = @"SA11166000005";
 //    if (SharedDataManager.deviceID.length > 0) {
 //        self.deviceIDTextField.text = SharedDataManager.deviceID;
 //    }
@@ -73,11 +75,11 @@
     if (SharedDataManager.token.length > 0) {
         self.tokenTextField.text = SharedDataManager.token;
     } else {
-        self.tokenTextField.text = @"f7d2551aa6544cff819d1332fa9a05ad";
+        self.tokenTextField.text = @"JEyze7I6jpr4";
 //        self.tokenTextField.text = @"r8xfa7hdjcm6";
     }
     
-    self.channelTextField.text = @"54300";
+    self.channelTextField.text = @"54500";
     if (SharedDataManager.channelID.length > 0) {
         self.channelTextField.text = SharedDataManager.channelID;
     }
@@ -369,6 +371,13 @@
 
 - (IBAction)unBind:(id)sender
 {
+//    [SLPSharedLTcpManager publicGetOnlineStatusWithDeviceID:self.deviceIDTextField.text deviceType:SLPDeviceType_Sal timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        SLPTCPOnlineStatus * online= data;
+//        NSLog(@"online----%d",online.onlineStatus);
+//
+//    }];
+//    return;
+    
     if (self.deviceIDTextField.text.length == 0) {
         [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
         return;

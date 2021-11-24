@@ -165,28 +165,28 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
-            [weakSelf.tableView reloadData];
-        }else{
-            alarmInfo.isOpen = YES;
-        }
-    }];
+//    [SLPSharedLTcpManager salEnableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        if (status != SLPDataTransferStatus_Succeed) {
+//            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//            [weakSelf.tableView reloadData];
+//        }else{
+//            alarmInfo.isOpen = YES;
+//        }
+//    }];
 }
 
 - (void)turnOffAlarmWithAlarm:(SA1001AlarmInfo *)alarmInfo
 {
     __weak typeof(self) weakSelf = self;
     
-    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        if (status != SLPDataTransferStatus_Succeed) {
-            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
-            [weakSelf.tableView reloadData];
-        }else{
-            alarmInfo.isOpen = YES;
-        }
-    }];
+//    [SLPSharedLTcpManager salDisableAlarm:alarmInfo.alarmID deviceInfo:SharedDataManager.deviceID timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        if (status != SLPDataTransferStatus_Succeed) {
+//            [Utils showDeviceOperationFailed:status atViewController:weakSelf];
+//            [weakSelf.tableView reloadData];
+//        }else{
+//            alarmInfo.isOpen = YES;
+//        }
+//    }];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

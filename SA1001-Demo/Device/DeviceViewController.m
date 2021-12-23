@@ -371,12 +371,12 @@
 
 - (IBAction)unBind:(id)sender
 {
-//    [SLPSharedLTcpManager publicGetOnlineStatusWithDeviceID:self.deviceIDTextField.text deviceType:SLPDeviceType_Sal timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-//        SLPTCPOnlineStatus * online= data;
-//        NSLog(@"online----%d",online.onlineStatus);
-//
-//    }];
-//    return;
+    [SLPSharedLTcpManager publicGetOnlineStatusWithDeviceID:self.deviceIDTextField.text deviceType:SLPDeviceType_Sal timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+        SLPTCPOnlineStatus * online= data;
+        NSLog(@"online----%d",online.onlineStatus);
+
+    }];
+    return;
     
     if (self.deviceIDTextField.text.length == 0) {
         [Utils showMessage:LocalizedString(@"id_cipher") controller:self];

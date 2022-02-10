@@ -110,6 +110,7 @@
     NSNotificationCenter *notificationCeter = [NSNotificationCenter defaultCenter];
     [notificationCeter addObserver:self selector:@selector(tcpDeviceConnected:) name:kNotificationNameLTCPConnected object:nil];
     [notificationCeter addObserver:self selector:@selector(tcpDeviceDisconnected:) name:kNotificationNameLTCPDisconnected object:nil];
+    [notificationCeter addObserver:self selector:@selector(onlineChanged:) name:kNotificationNameRequestDeviceOnlineStatusChanged object:nil];
 }
 
 - (void)tcpDeviceConnected:(NSNotification *)notification {
@@ -120,6 +121,13 @@
 - (void)tcpDeviceDisconnected:(NSNotification *)notification {
     self.connected = NO;
     SharedDataManager.connected = NO;
+}
+
+- (void)onlineChanged:(NSNotification *)notification {
+ 
+    NSDictionary *userInfo = notification.userInfo;
+    SLPTCPOnlineStatus *online = [userInfo objectForKey:kNotificationPostData];
+    
 }
 
 -(IBAction)connectDevice:(id)sender {

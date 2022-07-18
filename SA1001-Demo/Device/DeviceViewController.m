@@ -62,22 +62,23 @@
     self.firmwareVersionTextField.placeholder = LocalizedString(@"firmware_info");
     self.firmwareVersionTextField.userInteractionEnabled = NO;
     self.ipTextField.text = @"http://120.24.68.136:8091";
-    if (SharedDataManager.ip.length > 0) {
-        self.ipTextField.text = SharedDataManager.ip;
-    }
+//    self.ipTextField.text= @"https://api.sleepbytes.com";
+//    if (SharedDataManager.ip.length > 0) {
+//        self.ipTextField.text = SharedDataManager.ip;
+//    }
 //    SA11166000005  @"SA11166000005"
 //    SA11179000257  @"ncew4y78xcg21"
-    self.deviceIDTextField.text = @"SA11166000005";
+    self.deviceIDTextField.text = @"ncew4y78xcg21";
 //    if (SharedDataManager.deviceID.length > 0) {
 //        self.deviceIDTextField.text = SharedDataManager.deviceID;
 //    }
     
-    if (SharedDataManager.token.length > 0) {
-        self.tokenTextField.text = SharedDataManager.token;
-    } else {
-        self.tokenTextField.text = @"JEyze7I6jpr4";
-//        self.tokenTextField.text = @"r8xfa7hdjcm6";
-    }
+//    if (SharedDataManager.token.length > 0) {
+//        self.tokenTextField.text = SharedDataManager.token;
+//    } else {
+//        self.tokenTextField.text = @"JEyze7I6jpr4";
+        self.tokenTextField.text = @"kxu5jh5xmfap";
+//    }
     
     self.channelTextField.text = @"54500";
     if (SharedDataManager.channelID.length > 0) {

@@ -1,6 +1,0 @@
-framework module SLPTCP {
-  umbrella header "SLPTCP.h"
-
-  export *
-  module * { export * }
-}

@@ -50,7 +50,7 @@
 		</data>
 		<key>Headers/SLPHTTPManager.h</key>
 		<data>
-		TRhPVnjdTxEiyg5W81caBWHRtTs=
+		xv8PPfkoe+qmXOjQJE6ul4qLUoY=
 		</data>
 		<key>Headers/SLPLight.h</key>
 		<data>
@@ -74,7 +74,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		YC2yTPOrmMCvCaBsixieYs6Ogmg=
+		fSMLTdq3+KAujLcKNJUJOMzE7TM=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -216,11 +216,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			TRhPVnjdTxEiyg5W81caBWHRtTs=
+			xv8PPfkoe+qmXOjQJE6ul4qLUoY=
 			</data>
 			<key>hash2</key>
 			<data>
-			Q5oVO2n2sVSCL3XNFjg+XSJg2YZzkHHIAsNEDGxq8Zg=
+			jRFmzwJyHyNeQ7pll6WmrLmuz5VfrdGot64ISRXDCVo=
 			</data>
 		</dict>
 		<key>Headers/SLPLight.h</key>

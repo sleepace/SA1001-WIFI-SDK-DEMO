@@ -61,8 +61,8 @@
     self.deviceIDTextField.placeholder = LocalizedString(@"device_id_cipher");
     self.firmwareVersionTextField.placeholder = LocalizedString(@"firmware_info");
     self.firmwareVersionTextField.userInteractionEnabled = NO;
-    self.ipTextField.text = @"http://120.24.68.136:8091";
-//    self.ipTextField.text= @"https://api.sleepbytes.com";
+//    self.ipTextField.text = @"http://120.24.68.136:8091";
+    self.ipTextField.text= @"https://api.sleepbytes.com";
 //    if (SharedDataManager.ip.length > 0) {
 //        self.ipTextField.text = SharedDataManager.ip;
 //    }
@@ -145,8 +145,9 @@
         return;
     }
     
-    [SLPSharedLTcpManager.lTcp disconnectCompletion:nil];
-    
+    [SLPSharedLTcpManager.lTcp disconnectCompletion:^{
+        NSLog(@"disconnect Completion----");
+    }];
 
     __weak typeof(self) weakSelf = self;
     NSDictionary *par = @{
@@ -380,12 +381,12 @@
 
 - (IBAction)unBind:(id)sender
 {
-    [SLPSharedLTcpManager publicGetOnlineStatusWithDeviceID:self.deviceIDTextField.text deviceType:SLPDeviceType_Sal timeout:0 callback:^(SLPDataTransferStatus status, id data) {
-        SLPTCPOnlineStatus * online= data;
-        NSLog(@"online----%d",online.onlineStatus);
-
-    }];
-    return;
+//    [SLPSharedLTcpManager publicGetOnlineStatusWithDeviceID:self.deviceIDTextField.text deviceType:SLPDeviceType_Sal timeout:0 callback:^(SLPDataTransferStatus status, id data) {
+//        SLPTCPOnlineStatus * online= data;
+//        NSLog(@"online----%d",online.onlineStatus);
+//
+//    }];
+//    return;
     
     if (self.deviceIDTextField.text.length == 0) {
         [Utils showMessage:LocalizedString(@"id_cipher") controller:self];
